@@ -31,7 +31,6 @@ public class DatastoreServlet extends HttpServlet {
         } else if (address instanceof Inet4Address) {
             userIp = userIp.substring(0, userIp.indexOf(".", userIp.indexOf(".") + 1)) + ".*.*";
         }
-
         com.google.cloud.datastore.Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
         KeyFactory keyFactory = datastore.newKeyFactory().setKind("visit");
         IncompleteKey key = keyFactory.setKind("visit").newKey();
