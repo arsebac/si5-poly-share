@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+    <runtime>java8</runtime>
+    <threadsafe>true</threadsafe>
+    <application>polyshare-cgjm</application>
+    <version>1</version>
+    <!--automatic-scaling>
+        <min-pending-latency>2</min-pending-latency>
+    </automatic-scaling-->
+    <automatic-scaling/>
+    <system-properties>
+        <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
+    </system-properties>
+</appengine-web-app>

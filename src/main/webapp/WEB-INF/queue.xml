@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queue-entries>
+    <!--queue>
+        <name>queue-blue</name>
+        <target>v2.task-module</target>
+    </queue>
+    <queue>
+        <name>queue-red</name>
+        <rate>5/s</rate>
+    </queue-->
+</queue-entries>
