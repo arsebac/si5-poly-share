@@ -15,7 +15,7 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 
 @SuppressWarnings("serial")
-@WebServlet(name = "datastore", value = "")
+@WebServlet(name = "datastore", value = "/datastore")
 public class DatastoreServlet extends HttpServlet {
 
     @Override
