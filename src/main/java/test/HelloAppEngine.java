@@ -10,17 +10,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "HelloAppEngine", value = "/hello")
+@WebServlet(name = "HelloAE", value = "/hello")
 public class HelloAppEngine extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
-    try {
-      Thread.sleep(50);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
     Properties properties = System.getProperties();
 
     response.setContentType("text/plain");
