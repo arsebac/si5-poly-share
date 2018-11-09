@@ -21,7 +21,7 @@ public class MailUtil {
                 todo: change to noreply@polyshare-cgjm.appspotmail.com
                 The email used in order to send email should be registered (Cloud console->parameters)
              */
-            String fromEmail = "francois.melkonian@gmail.com";
+            String fromEmail = "sacc.polyshare@gmail.com";
 
             mimeMessage.setFrom(new InternetAddress(fromEmail, "PolyShare"));
             mimeMessage.addRecipients(Message.RecipientType.TO, destination);
