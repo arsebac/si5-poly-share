@@ -58,7 +58,7 @@ public class User implements Serializable {
         List<Video> videos = new ArrayList<>();
         String[] result = this.availableVideos.split(",");
         for (String videoString : result) {
-            String[] temp = videoString.split("-");
+            String[] temp = videoString.split("&");
             SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM HH:mm:ss z yyyy");
             Date date = null;
             try {
@@ -66,7 +66,7 @@ public class User implements Serializable {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            videos.add(new Video(Integer.parseInt(temp[1]), date));
+            videos.add(new Video(Integer.parseInt(temp[1]), date, temp[0]));
         }
         return videos;
     }

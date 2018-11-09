@@ -15,8 +15,7 @@ import java.util.Map;
 
 @WebServlet(
         name = "Download App Engine",
-        value = "/download",
-        urlPatterns = "/api/queuenoob/enqueue")
+        value = "/api/download")
 public class DownloadAppEngine extends HttpServlet {
 
     @Override
