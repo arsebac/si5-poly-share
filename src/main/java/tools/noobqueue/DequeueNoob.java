@@ -1,6 +1,8 @@
 package tools.noobqueue;
 
 
+import tools.MailUtil;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,12 +26,10 @@ public class DequeueNoob extends
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String account = request.getParameter("account");
-        String type = request.getParameter("type");
-        log.info("Try to " +type+" for account " + account);
-        if("download".equals(type)){
-            log.info(" with link " + request.getParameter("videoId"));
-        }
+        String email = request.getParameter("email");
+        String videoId = request.getParameter("videoId");
+
+        MailUtil.sendEmail(email, "Link to download you video: http://www.yolo.com/" + videoId);
 
         // Do something with key.
         // [START_EXCLUDE]
