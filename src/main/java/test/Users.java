@@ -1,7 +1,6 @@
 package test;
 
 import com.google.appengine.repackaged.com.google.gson.Gson;
-import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.*;
 
 import javax.servlet.ServletException;
@@ -11,32 +10,29 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.Inet4Address;
-import java.net.Inet6Address;
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name = "HelloAppEngine", value = "/articles")
-public class Articles extends HttpServlet {
-    List<Article> articles = new ArrayList<>();
+@WebServlet(name = "HelloAppEngine", value = "/users")
+public class Users extends HttpServlet {
+    List<User> users = new ArrayList<>();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         com.google.cloud.datastore.Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
-        EntityQuery query = Query.newEntityQueryBuilder().setKind("article")
-                .setOrderBy(StructuredQuery.OrderBy.desc("price")).build();
+        EntityQuery query = Query.newEntityQueryBuilder().setKind("user")
+                .setOrderBy(StructuredQuery.OrderBy.desc("score")).build();
         QueryResults<Entity> results = datastore.run(query);
 
         resp.setContentType("text/plain");
         PrintWriter out = resp.getWriter();
-        out.print("Articles :\n");
+        out.print("Users :\n");
         while (results.hasNext()) {
             com.google.cloud.datastore.Entity entity = results.next();
-            out.format("Article "+entity.getString("name")+
-                    ": price "+entity.getDouble("price")+
-                    ", quantity "+entity.getLong("quantity")+"\n");
+            out.format("User "+entity.getString("email")+
+                    ": videos "+entity.getString("availableVideos")+
+                    ", score "+entity.getLong("score")+"\n");
         }
 
         //resp.getWriter().print(out.toString());
@@ -44,17 +40,18 @@ public class Articles extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         com.google.cloud.datastore.Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
-        KeyFactory keyFactory = datastore.newKeyFactory().setKind("article");
-        IncompleteKey key = keyFactory.setKind("article").newKey();
+        KeyFactory keyFactory = datastore.newKeyFactory().setKind("user");
+        IncompleteKey key = keyFactory.setKind("user").newKey();
 
         Gson gson = new Gson();
-        Article article = gson.fromJson(request.getReader(), Article.class);
+        User user = gson.fromJson(request.getReader(), User.class);
 
-        // Record an article to the datastore
-        FullEntity<IncompleteKey> curArticle = FullEntity.newBuilder(key)
-                .set("name", article.name).set("price", article.price).set("quantity", article.quantity).build();
-        datastore.add(curArticle);
 
-        response.getWriter().println("Article added to list");
+        // Record an user to the datastore
+        FullEntity<IncompleteKey> curUser = FullEntity.newBuilder(key)
+                .set("email", user.email).set("availableVideos", "").set("score", user.score).build();
+        datastore.add(curUser);
+
+        response.getWriter().println("User added to database");
     }
 }
