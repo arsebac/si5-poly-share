@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="test.HelloAppEngine" %>
 <html>
 <head>
     <title>PolyShare</title>
@@ -8,33 +7,23 @@
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 <body>
-<h1>Salut</h1>
-
-<p>This is <%= HelloAppEngine.getInfo() %>.</p>
-<table>
-    <tr>
-        <td colspan="2" style="font-weight:bold;">Available Servlets:</td>
-    </tr>
-    <tr>
-        <td><a href='${pageContext.request.contextPath}/hello'>Hello App Engine</a></td>
-    </tr>
-    <tr>
-        <td><%= System.currentTimeMillis() %>
-        </td>
-    </tr>
-    <tr>
-    </tr>
-</table>
-<form action="/sendmail" method="post">
-    <div class="form-group">
-        <label for="mail">Email address</label>
-        <input type="email" class="form-control" id="mail" aria-describedby="emailHelp" placeholder="Enter email">
-    </div>
-    <div class="form-group">
-        <label for="exampleInputPassword1">Password</label>
-        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+<div class="container">
+    <h1>Home page</h1>
+    <form action="logincheck.jsp" method="post">
+        <div class="form-group row">
+            <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+            <div class="col-sm-10">
+                <input type="email" class="form-control" id="inputEmail" placeholder="Email" name="email">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="videoFile" class="col-sm-2 col-form-label">Video</label>
+            <div class="col-sm-10">
+                <input type="file" class="form-control-file" id="videoFile" name="video">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
 </body>
 </html>
