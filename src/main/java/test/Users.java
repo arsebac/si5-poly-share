@@ -22,20 +22,20 @@ public class Users extends HttpServlet {
         com.google.cloud.datastore.Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
         EntityQuery query = Query.newEntityQueryBuilder().setKind("user")
-                .setOrderBy(StructuredQuery.OrderBy.desc("score")).build();
+                .setOrderBy(StructuredQuery.OrderBy.desc("score")).setLimit(10).build();
         QueryResults<Entity> results = datastore.run(query);
 
-        resp.setContentType("text/plain");
+        resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
-        out.print("Users :\n");
+        resp.setContentType("text/html");
+
+        out.print("<html><h1>LeaderBoard</h1><body><table><th><td>Utilisateur</td><td>Score</td></th>\n");
         while (results.hasNext()) {
             com.google.cloud.datastore.Entity entity = results.next();
-            out.format("User "+entity.getString("email")+
-                    ": videos "+entity.getString("availableVideos")+
-                    ", score "+entity.getLong("score")+"\n");
+            out.format("<tr><td>"+entity.getString("email")+
+                    "</td><td>"+entity.getLong("score")+"</tr>");
         }
-
-        //resp.getWriter().print(out.toString());
+        out.print("</table></body></html>");
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
