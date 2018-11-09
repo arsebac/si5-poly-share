@@ -7,11 +7,13 @@ import java.util.Date;
 
 public class Video implements Serializable {
     int videoId;
+    String title;
     Date uploadDate;
 
-    public Video(int videoId, Date uploadDate) {
+    public Video(int videoId, Date uploadDate, String title) {
         this.videoId = videoId;
         this.uploadDate = uploadDate;
+        this.title = title;
     }
 
     public int getVideoId() {
@@ -31,6 +33,6 @@ public class Video implements Serializable {
     }
 
     public String stringFormat(){
-        return uploadDate.toString()+"-"+videoId;
+        return uploadDate.toString()+"&"+videoId+"&"+title;
     }
 }
