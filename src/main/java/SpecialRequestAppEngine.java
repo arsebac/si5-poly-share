@@ -2,6 +2,7 @@ import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.repackaged.org.joda.time.LocalDate;
 import com.google.cloud.datastore.*;
+import tools.util.DatastoreHelper;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,21 +20,10 @@ public class SpecialRequestAppEngine extends HttpServlet {
         String mail = req.getParameter("mail");
         String size = req.getParameter("size");
         String name = req.getParameter("title");
-        DatastoreService datastore;
-        datastore = DatastoreServiceFactory.getDatastoreService();
-        int point = Integer.parseInt(size) / 10;
-        final Query q =
-                new Query("user").setFilter(new Query.FilterPredicate("email", Query.FilterOperator.NOT_EQUAL, mail));
+        String url = LocalDate.now().toString() + "-" + new Random().nextInt();
+        new DatastoreHelper().addVideo(mail, size, url);
 
-        PreparedQuery pq = datastore.prepare(q);
-        com.google.appengine.api.datastore.Entity entity = pq.asSingleEntity(); // Retrieve up to five posts
-        String availableVideos = entity.getProperty("availableVideos").toString() + ",";
-        entity.setProperty("score", ((int)entity.getProperty("score")) + point);
-        entity.setProperty("availableVideos", availableVideos + LocalDate.now().toString() + "-" + new Random().nextInt());
-        try {
-            datastore.put(entity); // store the entity
-        } catch (DatastoreFailureException e) {
-            throw new ServletException("Datastore error", e);
-        }
-        }
+
+    }
+
 }

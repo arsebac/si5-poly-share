@@ -26,16 +26,18 @@ import com.google.cloud.storage.StorageOptions;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import pojo.UploadResult;
+import pojo.Video;
 
 // [START example]
 public class CloudStorageHelper {
@@ -75,22 +77,25 @@ public class CloudStorageHelper {
      * Extracts the file payload from an HttpServletRequest, checks that the file extension
      * is supported and uploads the file to Google Cloud Storage.
      */
-    public String getVideoUrl(HttpServletRequest req, final String bucket) throws IOException, ServletException {
-        StringBuilder builder = new StringBuilder();
+    public UploadResult getVideoUrl(HttpServletRequest req, final String bucket) throws IOException, ServletException {
+	    UploadResult result= new UploadResult(-1,null);
         req.getParts().forEach(filePart->{
             final String fileName = filePart.getSubmittedFileName();
             // Check extension of file
+	        Video video = new Video(0, new Date(),fileName);
+	        long size = filePart.getSize();
+	        result.setSize(Math.toIntExact(size));
             if (fileName != null && !fileName.isEmpty() /*&& fileName.contains(".")*/) {
                 final String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
 
                 try {
-                    builder.append( uploadFile(filePart, bucket));
+                    result.setDownloadLink(uploadFile(filePart, bucket));
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
 
             }
         });
-        return builder.toString();
+        return result;
     }
 }
