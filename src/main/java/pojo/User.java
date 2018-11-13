@@ -1,7 +1,6 @@
-package test;
+package pojo;
 
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -62,6 +61,7 @@ public class User implements Serializable {
             SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM HH:mm:ss z yyyy");
             Date date = null;
             try {
+
                 date = sdf.parse(temp[0]);
             } catch (ParseException e) {
                 e.printStackTrace();

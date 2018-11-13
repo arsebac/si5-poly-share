@@ -1,4 +1,4 @@
-package test;
+package pojo;
 
 import com.google.appengine.repackaged.com.google.gson.Gson;
 import com.google.cloud.datastore.*;

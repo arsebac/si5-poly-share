@@ -1,6 +1,8 @@
 package routes;
 
+import pojo.UploadResult;
 import tools.util.CloudStorageHelper;
+import tools.util.DatastoreHelper;
 import tools.util.MailUtil;
 
 import javax.servlet.ServletException;
@@ -21,7 +23,8 @@ public class UploadEngine extends HttpServlet {
     public void init() throws ServletException {
         CloudStorageHelper storageHelper = new CloudStorageHelper();
         this.getServletContext().setAttribute("storageHelper", storageHelper);
-        
+        DatastoreHelper datastoreHelper = new DatastoreHelper();
+        this.getServletContext().setAttribute("datastoreHelper", datastoreHelper);
     }
     
     @Override
@@ -29,8 +32,11 @@ public class UploadEngine extends HttpServlet {
             throws IOException {
         CloudStorageHelper storageHelper = (CloudStorageHelper) request.getServletContext().getAttribute("storageHelper");
         try {
-            String videoUrl = storageHelper.getVideoUrl(request, BUCKET_NAME);
-            MailUtil.sendEmail(request.getParameter("email"), "Hello !\n The upload worked ! discover your work here :" + videoUrl);
+            UploadResult uploadResult = storageHelper.getVideoUrl(request, BUCKET_NAME);
+            MailUtil.sendEmail(request.getParameter("email"), "MErci d'avoir utilisé Poly truc, Voici le lien de téléchargement partageable :" + uploadResult.getDownloadLink());
+
+            DatastoreHelper datastoreHelper =  (DatastoreHelper) request.getServletContext().getAttribute("datastoreHelper");
+            datastoreHelper.addVideo(request.getParameter("email"),uploadResult.getSize()+"",uploadResult.getDownloadLink());
             response.setContentType("text/plain");
             response.setStatus(201);
             response.getWriter().println("succeeded");
