@@ -1,5 +1,7 @@
 package tools;
 
+import tools.util.MailUtil;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

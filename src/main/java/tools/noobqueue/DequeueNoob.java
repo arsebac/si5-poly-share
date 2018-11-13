@@ -1,7 +1,7 @@
 package tools.noobqueue;
 
 
-import tools.MailUtil;
+import tools.util.MailUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

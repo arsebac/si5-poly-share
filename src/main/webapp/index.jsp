@@ -9,7 +9,7 @@
 <body>
 <div class="container">
     <h1>Home page</h1>
-    <form action="logincheck.jsp" method="post">
+    <form method="POST" action="/api/upload" enctype="multipart/form-data">
         <div class="form-group row">
             <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
             <div class="col-sm-10">
@@ -19,7 +19,7 @@
         <div class="form-group row">
             <label for="videoFile" class="col-sm-2 col-form-label">Video</label>
             <div class="col-sm-10">
-                <input type="file" class="form-control-file" id="videoFile" name="video">
+                <input type="file" class="form-control-file" id="videoFile" name="file">
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>

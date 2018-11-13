@@ -76,16 +76,21 @@ public class CloudStorageHelper {
      * is supported and uploads the file to Google Cloud Storage.
      */
     public String getVideoUrl(HttpServletRequest req, final String bucket) throws IOException, ServletException {
-        Part filePart = req.getPart("file");
-        final String fileName = filePart.getSubmittedFileName();
-        String videoUrl = req.getParameter("videoUrl");
-        // Check extension of file
-        if (fileName != null && !fileName.isEmpty() && fileName.contains(".")) {
-            final String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
-            
-            return this.uploadFile(filePart, bucket);
-            
-        }
-        return videoUrl;
+        StringBuilder builder = new StringBuilder();
+        req.getParts().forEach(filePart->{
+            final String fileName = filePart.getSubmittedFileName();
+            // Check extension of file
+            if (fileName != null && !fileName.isEmpty() /*&& fileName.contains(".")*/) {
+                final String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
+
+                try {
+                    builder.append( uploadFile(filePart, bucket));
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+
+            }
+        });
+        return builder.toString();
     }
 }

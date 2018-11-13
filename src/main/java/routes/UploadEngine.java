@@ -1,6 +1,7 @@
 package routes;
 
 import tools.util.CloudStorageHelper;
+import tools.util.MailUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -29,10 +30,11 @@ public class UploadEngine extends HttpServlet {
         CloudStorageHelper storageHelper = (CloudStorageHelper) request.getServletContext().getAttribute("storageHelper");
         try {
             String videoUrl = storageHelper.getVideoUrl(request, BUCKET_NAME);
+            MailUtil.sendEmail(request.getParameter("email"), "Hello !\n The upload worked ! discover your work here :" + videoUrl);
             response.setContentType("text/plain");
             response.setStatus(201);
             response.getWriter().println("succeeded");
-            
+
         } catch (ServletException e) {
             response.setContentType("text/plain");
             response.setStatus(500);
@@ -40,11 +42,4 @@ public class UploadEngine extends HttpServlet {
             response.getWriter().println(e);
         }
     }
-    
-    public static String getInfo() {
-        return "Version: " + System.getProperty("java.version")
-                + " OS: " + System.getProperty("os.name")
-                + " User: " + System.getProperty("user.name");
-    }
-    
 }
