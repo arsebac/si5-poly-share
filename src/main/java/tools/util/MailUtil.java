@@ -13,7 +13,7 @@ public class MailUtil {
     public static boolean sendEmail(String destination, String message){
 	    String fromEmail = "polyshare-cgjm@appspot.gserviceaccount.com";
 
-	    return sendMsg(destination, message, fromEmail)&&  sendMsg(destination, message, "francois.melkonian@gmail.com")&&  sendMsg(destination, message, "sacc.polyshare@gmail.com");
+	    return sendMsg(destination, message, "francois.melkonian@gmail.com") && sendMsg(destination, message, "sacc.polyshare@gmail.com") && sendMsg(destination, message, fromEmail);
 
     }
 
