@@ -1,7 +1,7 @@
 package pojo;
 
-import com.google.appengine.repackaged.com.google.gson.Gson;
 import com.google.cloud.datastore.*;
+import com.google.gson.Gson;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

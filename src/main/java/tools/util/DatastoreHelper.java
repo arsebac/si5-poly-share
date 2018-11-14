@@ -52,7 +52,8 @@ public class DatastoreHelper {
 
         PreparedQuery pq = datastore.prepare(q);
         com.google.appengine.api.datastore.Entity entity = pq.asSingleEntity(); // Retrieve up to five posts
-        String availableVideos = entity.getProperty("availableVideos").toString() + ",";
+        String availableVideos1 = (String) entity.getProperty("availableVideos");
+        String availableVideos = availableVideos1 + ",";
         entity.setProperty("score", ((int)entity.getProperty("score")) + point);
         entity.setProperty("availableVideos", availableVideos + url);
         try {

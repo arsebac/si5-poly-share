@@ -12,6 +12,9 @@ public class User implements Serializable {
     String availableVideos = "";
     int score;
 
+    public User() {
+    }
+
     public User(String email, int score) {
         this.email = email;
         this.score = score;
