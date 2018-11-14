@@ -17,23 +17,12 @@
 package tools.util;
 
 import com.google.appengine.api.datastore.*;
-import com.google.cloud.storage.Acl;
-import com.google.cloud.storage.Acl.Role;
-import com.google.cloud.storage.Acl.User;
-import com.google.cloud.storage.BlobInfo;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import com.google.appengine.api.search.DateUtil;
+import pojo.Video;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 // [START example]
 public class DatastoreHelper {
@@ -52,10 +41,9 @@ public class DatastoreHelper {
 
         PreparedQuery pq = datastore.prepare(q);
         com.google.appengine.api.datastore.Entity entity = pq.asSingleEntity(); // Retrieve up to five posts
-        String availableVideos1 = (String) entity.getProperty("availableVideos");
-        String availableVideos = availableVideos1 + ",";
+        List<Video> availableVideos1 = (List<Video>) entity.getProperty("availableVideos");
         entity.setProperty("score", ((long)entity.getProperty("score")) + point);
-        entity.setProperty("availableVideos", availableVideos + url);
+        entity.setProperty("availableVideos", availableVideos1.add(new Video(url, DateUtil.serializeDate(new Date()), "yolo")));
         try {
             datastore.put(entity); // store the entity
         } catch (DatastoreFailureException e) {

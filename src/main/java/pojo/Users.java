@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @WebServlet(name = "HelloAppEngine", value = "/users")
@@ -49,7 +50,7 @@ public class Users extends HttpServlet {
 
         // Record an user to the datastore
         FullEntity<IncompleteKey> curUser = FullEntity.newBuilder(key)
-                .set("email", user.email).set("availableVideos", "").set("score", user.score).build();
+                .set("email", user.email).set("availableVideos", new LinkedList<>()).set("score", user.score).build();
         datastore.add(curUser);
 
         response.getWriter().println("User added to database");

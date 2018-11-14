@@ -82,7 +82,6 @@ public class CloudStorageHelper {
         req.getParts().forEach(filePart->{
             final String fileName = filePart.getSubmittedFileName();
             // Check extension of file
-	        Video video = new Video(0, new Date(),fileName);
 	        long size = filePart.getSize();
 	        result.setSize(Math.toIntExact(size));
             if (fileName != null && !fileName.isEmpty() /*&& fileName.contains(".")*/) {
