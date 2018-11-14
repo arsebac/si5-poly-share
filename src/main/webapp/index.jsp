@@ -5,6 +5,20 @@
     <title>PolyShare</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script>
+        function signIn() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    alert(this.responseText);
+                }
+            };
+            xhttp.open("POST", "/users", true);
+            xhttp.setRequestHeader("Content-type", "application/json");
+            xhttp.send("{\"availableVideos\":\"\",\"email\":\""+document.getElementById("emailInscription").value+"\"}");
+        }
+
+    </script>
 </head>
 <body>
 <div class="container">
@@ -24,6 +38,10 @@
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    <h1>Inscription</h1>
+    <div class="form-group row">
+        <label for="emailInscription">Email :</label><input id="emailInscription" type="text">
+    <button onclick="signIn()">S'inscrire</button>
 </div>
 </body>
 </html>
