@@ -10,7 +10,7 @@ import java.util.List;
 public class User implements Serializable {
     String email;
     String availableVideos = "";
-    int score;
+    long score;
 
     public User() {
     }
@@ -36,11 +36,11 @@ public class User implements Serializable {
         this.availableVideos = availableVideos;
     }
 
-    public int getScore() {
+    public long getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(long score) {
         this.score = score;
     }
 
