@@ -22,6 +22,7 @@ import pojo.Video;
 
 import javax.servlet.ServletException;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 // [START example]
@@ -42,6 +43,8 @@ public class DatastoreHelper {
         PreparedQuery pq = datastore.prepare(q);
         com.google.appengine.api.datastore.Entity entity = pq.asSingleEntity(); // Retrieve up to five posts
         List<Video> availableVideos1 = (List<Video>) entity.getProperty("availableVideos");
+        if (availableVideos1 == null)
+            availableVideos1 = new LinkedList<>();
         entity.setProperty("score", ((long)entity.getProperty("score")) + point);
         entity.setProperty("availableVideos", availableVideos1.add(new Video(url, DateUtil.serializeDate(new Date()), "yolo")));
         try {
