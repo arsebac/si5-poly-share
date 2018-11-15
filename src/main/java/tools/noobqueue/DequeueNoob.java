@@ -1,6 +1,8 @@
 package tools.noobqueue;
 
 
+import pojo.Video;
+import tools.util.DatastoreHelper;
 import tools.util.MailUtil;
 
 import javax.servlet.ServletException;
@@ -27,9 +29,13 @@ public class DequeueNoob extends
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String email = request.getParameter("email");
-        String videoId = request.getParameter("videoId");
+        String videoTitle = request.getParameter("videoTitle");
+        String videoOwner = request.getParameter("videoOwner");
 
-        MailUtil.sendEmail(email, "Link to download you video: http://www.yolo.com/" + videoId);
+        DatastoreHelper datastoreHelper =  (DatastoreHelper) request.getServletContext().getAttribute("datastoreHelper");
+        Video video = datastoreHelper.getVideo(videoOwner, videoTitle);
+
+        MailUtil.sendEmail(email, "Link to download the video you requested: " + video.getUrl());
 
         // Do something with key.
         // [START_EXCLUDE]

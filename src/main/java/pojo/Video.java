@@ -15,4 +15,15 @@ public class Video implements Serializable {
         this.title = title;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getUploadDate() {
+        return uploadDate;
+    }
 }

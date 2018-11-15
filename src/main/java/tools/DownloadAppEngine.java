@@ -15,17 +15,21 @@ import java.util.Map;
 
 @WebServlet(
         name = "Download App Engine",
-        value = "/api/download")
+        urlPatterns = "/api/download/*")
 public class DownloadAppEngine extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        String pathInfo = req.getPathInfo();
+        String[] pathParts = pathInfo.split("/");
+        String videoOwner = pathParts[2];
+        String videoTitle = pathParts[3];
+
         String email = req.getParameter("email");
-        String videoId = req.getParameter("videoId");
 
         System.out.println(req.toString());
         System.out.println();
-        if(email == null || videoId == null){
+        if(email == null){
             res.sendError(400,"'email' or 'type' needed.");
             return;
         }
@@ -34,7 +38,8 @@ public class DownloadAppEngine extends HttpServlet {
 
         Map<String,String> params = new HashMap<>();
         params.put("email", email);
-        params.put("videoId", videoId);
+        params.put("videoOwner", videoOwner);
+        params.put("videoTitle", videoTitle);
         // FIXME For now, everyone is noob
         queue.add(QueueHelper.createQueueMessage("/api/queuenoob/dequeueNoob", params));
     }

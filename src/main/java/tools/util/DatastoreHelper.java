@@ -24,6 +24,7 @@ import javax.servlet.ServletException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Stream;
 
 // [START example]
 public class DatastoreHelper {
@@ -58,5 +59,22 @@ public class DatastoreHelper {
         } catch (DatastoreFailureException e) {
             throw new ServletException("Datastore error", e);
         }
+    }
+
+    public Video getVideo(String videoOwner, String videoTitle) {
+        final Query q = new Query("user").setFilter(new Query.FilterPredicate("email", Query.FilterOperator.EQUAL, videoOwner));
+
+        PreparedQuery pq = datastore.prepare(q);
+        com.google.appengine.api.datastore.Entity entity = pq.asSingleEntity(); // Retrieve up to five posts
+        List<EmbeddedEntity> availableVideos1 = (List<EmbeddedEntity>) entity.getProperty("availableVideos");
+        if (availableVideos1 == null)
+            return null;
+        Stream<EmbeddedEntity> resStream = availableVideos1.stream().filter(e -> e.getProperty("title").equals(videoTitle));
+        if (resStream.count() != 1)
+            return null;
+        EmbeddedEntity res = resStream.findFirst().get();
+
+        Video video = new Video((String) res.getProperty("url"), (String) res.getProperty("uploadDate"), (String) res.getProperty("title"));
+        return video;
     }
 }
