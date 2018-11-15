@@ -42,11 +42,17 @@ public class DatastoreHelper {
 
         PreparedQuery pq = datastore.prepare(q);
         com.google.appengine.api.datastore.Entity entity = pq.asSingleEntity(); // Retrieve up to five posts
-        List<Video> availableVideos1 = (List<Video>) entity.getProperty("availableVideos");
+        List<EmbeddedEntity> availableVideos1 = (List<EmbeddedEntity>) entity.getProperty("availableVideos");
         if (availableVideos1 == null)
             availableVideos1 = new LinkedList<>();
+        EmbeddedEntity video = new EmbeddedEntity();
+        video.setProperty("url", url);
+        video.setProperty("uploadDate", DateUtil.serializeDate(new Date()));
+        video.setProperty("title", "yolo");
+        availableVideos1.add(video);
+
         entity.setProperty("score", ((long)entity.getProperty("score")) + point);
-        entity.setProperty("availableVideos", availableVideos1.add(new Video(url, DateUtil.serializeDate(new Date()), "yolo")));
+        entity.setProperty("availableVideos", availableVideos1);
         try {
             datastore.put(entity); // store the entity
         } catch (DatastoreFailureException e) {
