@@ -36,7 +36,7 @@ public class UploadEngine extends HttpServlet {
             MailUtil.sendEmail(request.getParameter("email"), "MErci d'avoir utilisé Poly truc, Voici le lien de téléchargement partageable :" + uploadResult.getDownloadLink());
 
             DatastoreHelper datastoreHelper =  (DatastoreHelper) request.getServletContext().getAttribute("datastoreHelper");
-            datastoreHelper.addVideo(request.getParameter("email"),uploadResult.getSize()+"",uploadResult.getDownloadLink());
+            datastoreHelper.addVideo(request.getParameter("email"),uploadResult.getSize()+"",uploadResult.getDownloadLink(), request.getParameter("title"));
             response.setContentType("text/plain");
             response.setStatus(201);
             response.getWriter().println("succeeded");

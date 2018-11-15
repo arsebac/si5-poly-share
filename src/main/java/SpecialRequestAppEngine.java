@@ -19,9 +19,9 @@ public class SpecialRequestAppEngine extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String mail = req.getParameter("mail");
         String size = req.getParameter("size");
-        String name = req.getParameter("title");
+        String title = req.getParameter("title");
         String url = LocalDate.now().toString() + "-" + new Random().nextInt();
-        new DatastoreHelper().addVideo(mail, size, url);
+        new DatastoreHelper().addVideo(mail, size, url, title);
 
 
     }

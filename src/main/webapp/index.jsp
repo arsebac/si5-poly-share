@@ -36,6 +36,12 @@
                 <input type="file" class="form-control-file" id="videoFile" name="file">
             </div>
         </div>
+        <div class="form-group row">
+            <label for="inputTitle" class="col-sm-2 col-form-label">Title (please no space)</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputTitle" placeholder="Title" name="title">
+            </div>
+        </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     <h1>Inscription</h1>

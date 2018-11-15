@@ -35,7 +35,7 @@ public class DatastoreHelper {
          datastore= DatastoreServiceFactory.getDatastoreService();
     }
 
-    public void addVideo(String mail, String size, String url) throws ServletException {
+    public void addVideo(String mail, String size, String url, String title) throws ServletException {
         int point = Integer.parseInt(size) / 10;
         final Query q =
                 new Query("user").setFilter(new Query.FilterPredicate("email", Query.FilterOperator.EQUAL, mail));
@@ -48,7 +48,7 @@ public class DatastoreHelper {
         EmbeddedEntity video = new EmbeddedEntity();
         video.setProperty("url", url);
         video.setProperty("uploadDate", DateUtil.serializeDate(new Date()));
-        video.setProperty("title", "yolo");
+        video.setProperty("title", title);
         availableVideos1.add(video);
 
         entity.setProperty("score", ((long)entity.getProperty("score")) + point);
