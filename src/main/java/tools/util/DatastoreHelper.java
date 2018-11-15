@@ -24,6 +24,7 @@ import javax.servlet.ServletException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 // [START example]
@@ -69,12 +70,11 @@ public class DatastoreHelper {
         List<EmbeddedEntity> availableVideos1 = (List<EmbeddedEntity>) entity.getProperty("availableVideos");
         if (availableVideos1 == null)
             return null;
-        Stream<EmbeddedEntity> resStream = availableVideos1.stream().filter(e -> e.getProperty("title").equals(videoTitle));
-        if (resStream.count() != 1)
+        List<EmbeddedEntity> resList = availableVideos1.stream().filter(e -> e.getProperty("title").equals(videoTitle)).collect(Collectors.toList());
+        if (resList.size() != 1)
             return null;
-        EmbeddedEntity res = resStream.findFirst().get();
+        EmbeddedEntity res = resList.get(0);
 
-        Video video = new Video((String) res.getProperty("url"), (String) res.getProperty("uploadDate"), (String) res.getProperty("title"));
-        return video;
+        return new Video((String) res.getProperty("url"), (String) res.getProperty("uploadDate"), (String) res.getProperty("title"));
     }
 }

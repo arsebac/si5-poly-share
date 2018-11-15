@@ -22,8 +22,8 @@ public class DownloadAppEngine extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         String pathInfo = req.getPathInfo();
         String[] pathParts = pathInfo.split("/");
-        String videoOwner = pathParts[2];
-        String videoTitle = pathParts[3];
+        String videoOwner = pathParts[1];
+        String videoTitle = pathParts[2];
 
         String email = req.getParameter("email");
 

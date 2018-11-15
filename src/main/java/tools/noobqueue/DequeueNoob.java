@@ -2,6 +2,7 @@ package tools.noobqueue;
 
 
 import pojo.Video;
+import tools.util.CloudStorageHelper;
 import tools.util.DatastoreHelper;
 import tools.util.MailUtil;
 
@@ -25,6 +26,12 @@ public class DequeueNoob extends
         HttpServlet {
 
     private static final Logger log = Logger.getLogger(DequeueNoob.class.getName());
+
+    @Override
+    public void init() throws ServletException {
+        DatastoreHelper datastoreHelper = new DatastoreHelper();
+        this.getServletContext().setAttribute("datastoreHelper", datastoreHelper);
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
