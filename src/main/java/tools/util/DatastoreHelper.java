@@ -25,6 +25,7 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
+import com.google.appengine.repackaged.com.google.api.client.util.PemReader;
 import pojo.Video;
 
 import javax.servlet.ServletException;
@@ -100,6 +101,14 @@ public class DatastoreHelper {
             System.out.println("salut");
             Storage storage = StorageOptions.getDefaultInstance().getService();
             storage.delete(this.blobInfo.getBlobId());
+        }
+    }
+
+    public void deleteAll() {
+        Query query = new Query("user").setKeysOnly();
+        Iterable<Entity> iter = datastore.prepare(query).asIterable(FetchOptions.Builder.withLimit(400));
+        for (Entity entity : iter) {
+            datastore.delete(entity.getKey());
         }
     }
 }
