@@ -57,7 +57,7 @@ public class CloudStorageHelper {
      * Uploads a file to Google Cloud Storage to the bucket specified in the BUCKET_NAME
      * environment variable, appending a timestamp to end of the uploaded filename.
      */
-    public String uploadFile(Part filePart, final String bucketName) throws IOException {
+    public BlobInfo uploadFile(Part filePart, final String bucketName) throws IOException {
         DateTimeFormatter dtf = DateTimeFormat.forPattern("-YYYY-MM-dd-HHmmssSSS");
         DateTime dt = DateTime.now(DateTimeZone.UTC);
         String dtString = dt.toString(dtf);
@@ -70,9 +70,9 @@ public class CloudStorageHelper {
                         .build(),
                 filePart.getInputStream());
         // return the public download link
-       
+        
         System.out.println("blob " + blobInfo.getName() + " ");
-        return blobInfo.getMediaLink();
+        return blobInfo;
     }
     // [END uploadFile]
     
@@ -82,27 +82,26 @@ public class CloudStorageHelper {
      * Extracts the file payload from an HttpServletRequest, checks that the file extension
      * is supported and uploads the file to Google Cloud Storage.
      */
-    public UploadResult getVideoUrl(HttpServletRequest req, final String bucket) throws IOException, ServletException {
-        UploadResult result = new UploadResult(-1, null);
-        req.getParts().forEach(filePart -> {
+    public BlobInfo getVideoUrl(HttpServletRequest req, final String bucket) throws IOException, ServletException {
+        BlobInfo blobInfo = null;
+        for (Part filePart : req.getParts()) {
             final String fileName = filePart.getSubmittedFileName();
             // Check extension of file
             long size = filePart.getSize();
-            result.setSize(Math.toIntExact(size));
             if (fileName != null && !fileName.isEmpty() /*&& fileName.contains(".")*/) {
                 final String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
                 
                 try {
-                    result.setDownloadLink(uploadFile(filePart, bucket));
+                    blobInfo = uploadFile(filePart, bucket);
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
                 
             }
-        });
-        return result;
+        }
+        return blobInfo;
     }
     
-
+    
 }
 

@@ -20,11 +20,11 @@ public class UploadResult {
 	public void setSize(int size) {
 		this.size = size;
 	}
-
+	
 	public String getDownloadLink() {
 		return downloadLink;
 	}
-
+	
 	public void setDownloadLink(String downloadLink) {
 		this.downloadLink = downloadLink;
 	}

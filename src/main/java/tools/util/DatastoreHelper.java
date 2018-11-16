@@ -44,35 +44,37 @@ public class DatastoreHelper {
         datastore = DatastoreServiceFactory.getDatastoreService();
     }
     
-    public void addVideo(String mail, String size, BlobInfo blobInfo, String title) throws ServletException {
-        int point = Integer.parseInt(size) / 10;
-        final Query q =
-                new Query("user").setFilter(new Query.FilterPredicate("email", Query.FilterOperator.EQUAL, mail));
-        
+    public Entity getUser(String mail) {
+        Query q = new Query("user").setFilter(new Query.FilterPredicate("email", Query.FilterOperator.EQUAL, mail));
         PreparedQuery pq = datastore.prepare(q);
-        com.google.appengine.api.datastore.Entity entity = pq.asSingleEntity(); // Retrieve up to five posts
-        List<EmbeddedEntity> availableVideos1 = (List<EmbeddedEntity>) entity.getProperty("availableVideos");
-        if (availableVideos1 == null) {
-            availableVideos1 = new LinkedList<>();
+        return pq.asSingleEntity(); // Retrieve up to five posts
+    }
+    
+    public void addVideo(String mail, long size, BlobInfo blobInfo, String title) throws ServletException {
+        int point = Math.toIntExact(size / 10);
+        Entity entity = getUser(mail);
+        List<EmbeddedEntity> availableVideos = (List<EmbeddedEntity>) entity.getProperty("availableVideos");
+        if (availableVideos == null) {
+            availableVideos = new LinkedList<>();
         }
         EmbeddedEntity video = new EmbeddedEntity();
         video.setProperty("url", blobInfo.getMediaLink());
         video.setProperty("uploadDate", DateUtil.serializeDate(new Date()));
         video.setProperty("title", title);
-        availableVideos1.add(video);
+        availableVideos.add(video);
         int score = (int) entity.getProperties().get("score");
-        int timeout = 300000;
+        int deleteTimeout = 3000;
         if (score > 100 && score <= 200) {
-            timeout = 600000;
+            deleteTimeout = 600000;
         } else if (score > 200) {
-            timeout = 1800000;
+            deleteTimeout = 1800000;
         }
         Queue queue = QueueFactory.getDefaultQueue();
-        queue.add(TaskOptions.Builder.withPayload(new BlobDeleter(blobInfo)).countdownMillis(timeout));
+        queue.add(TaskOptions.Builder.withPayload(new BlobDeleter(blobInfo)).countdownMillis(deleteTimeout));
         
         
         entity.setProperty("score", ((long) entity.getProperty("score")) + point);
-        entity.setProperty("availableVideos", availableVideos1);
+        entity.setProperty("availableVideos", availableVideos);
         try {
             datastore.put(entity); // store the entity
         } catch (DatastoreFailureException e) {
@@ -81,10 +83,7 @@ public class DatastoreHelper {
     }
     
     public Video getVideo(String videoOwner, String videoTitle) {
-        final Query q = new Query("user").setFilter(new Query.FilterPredicate("email", Query.FilterOperator.EQUAL, videoOwner));
-        
-        PreparedQuery pq = datastore.prepare(q);
-        com.google.appengine.api.datastore.Entity entity = pq.asSingleEntity(); // Retrieve up to five posts
+        Entity entity = getUser(videoOwner);
         List<EmbeddedEntity> availableVideos1 = (List<EmbeddedEntity>) entity.getProperty("availableVideos");
         if (availableVideos1 == null) {
             return null;
