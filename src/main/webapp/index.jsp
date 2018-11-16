@@ -45,12 +45,12 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     <h1>Inscription</h1>
-    <form enctype='application/json' action="/users" method="post">
+    <form enctype='multipart/form-data' action="/users" method="post">
         <div class="form-group row">
-            <label for="email">Email :</label><input id="email" value="email" type="text">
+            <label for="email">Email :</label><input id="email" name="email" value="email@gmail.com" type="text"/>
         </div>
         <div class="form-group row">
-            <label for="score">Score :</label><input id="score" value="score" type="text"/>
+            <label for="score">Score :</label><input id="score" name="score" value="12" type="text"/>
         </div>
         <div class="form-group row">
             <input type="submit"/>
