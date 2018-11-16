@@ -18,14 +18,6 @@ package tools.util;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.search.DateUtil;
-import com.google.appengine.api.taskqueue.DeferredTask;
-import com.google.appengine.api.taskqueue.Queue;
-import com.google.appengine.api.taskqueue.QueueFactory;
-import com.google.appengine.api.taskqueue.TaskOptions;
-import com.google.cloud.storage.BlobInfo;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
-import com.google.appengine.repackaged.com.google.api.client.util.PemReader;
 import pojo.Video;
 
 import javax.servlet.ServletException;
@@ -89,20 +81,6 @@ public class DatastoreHelper {
         return new Video((String) res.getProperty("url"), (String) res.getProperty("uploadDate"), (String) res.getProperty("title"));
     }
     
-    public static class BlobDeleter implements DeferredTask {
-        private BlobInfo blobInfo;
-        
-        public BlobDeleter(BlobInfo blobInfo) {
-            this.blobInfo = blobInfo;
-        }
-        
-        @Override
-        public void run() {
-            System.out.println("salut");
-            Storage storage = StorageOptions.getDefaultInstance().getService();
-            storage.delete(this.blobInfo.getBlobId());
-        }
-    }
 
     public void deleteAll() {
         Query query = new Query("user").setKeysOnly();

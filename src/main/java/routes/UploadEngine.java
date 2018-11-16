@@ -4,10 +4,13 @@ import com.google.appengine.api.datastore.DatastoreFailureException;
 import com.google.appengine.api.datastore.EmbeddedEntity;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.search.DateUtil;
+import com.google.appengine.api.taskqueue.DeferredTask;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import pojo.UploadResult;
 import tools.util.CloudStorageHelper;
 import tools.util.DatastoreHelper;
@@ -74,7 +77,22 @@ public class UploadEngine extends HttpServlet {
             deleteTimeout = 1800000;
         }
         Queue queue = QueueFactory.getDefaultQueue();
-        queue.add(TaskOptions.Builder.withPayload(new DatastoreHelper.BlobDeleter(blobInfo)).countdownMillis(deleteTimeout));
+        queue.add(TaskOptions.Builder.withPayload(new BlobDeleter(blobInfo)).countdownMillis(deleteTimeout));
         
+    }
+    
+    public static class BlobDeleter implements DeferredTask {
+        private BlobInfo blobInfo;
+        
+        public BlobDeleter(BlobInfo blobInfo) {
+            this.blobInfo = blobInfo;
+        }
+        
+        @Override
+        public void run() {
+            System.out.println("salut");
+            Storage storage = StorageOptions.getDefaultInstance().getService();
+            storage.delete(this.blobInfo.getBlobId());
+        }
     }
 }
