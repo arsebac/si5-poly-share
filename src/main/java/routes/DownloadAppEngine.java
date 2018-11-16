@@ -35,6 +35,7 @@ public class DownloadAppEngine extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         String email = req.getParameter("email");
+        email=  email.replaceAll(" ","+");
         final Query q = new Query("user").setFilter(new Query.FilterPredicate("email", Query.FilterOperator.EQUAL, email));
 
         PreparedQuery pq = datastore.prepare(q);
@@ -51,6 +52,10 @@ public class DownloadAppEngine extends HttpServlet {
         System.out.println();
         if(email == null){
             res.sendError(400,"'email' or 'type' needed.");
+            return;
+        }
+        if(entity == null){
+            res.sendError(400,"User "+ email + " not found");
             return;
         }
         long score = (long) entity.getProperty("score");
