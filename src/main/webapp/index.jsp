@@ -8,14 +8,14 @@
     <script>
         function signIn() {
             var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
+            xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     alert(this.responseText);
                 }
             };
             xhttp.open("POST", "/users", true);
             xhttp.setRequestHeader("Content-type", "application/json");
-            xhttp.send("{\"availableVideos\":\"\",\"email\":\""+document.getElementById("emailInscription").value+"\"}");
+            xhttp.send("{\"score\":\""+document.getElementById("score").value+"\",\"email\":\"" + document.getElementById("email").value + "\"}");
         }
 
     </script>
@@ -45,9 +45,16 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     <h1>Inscription</h1>
-    <div class="form-group row">
-        <label for="emailInscription">Email :</label><input id="emailInscription" type="text">
-    <button onclick="signIn()">S'inscrire</button>
-</div>
+    <form enctype='multipart/form-data' action="/users" method="post">
+        <div class="form-group row">
+            <label for="email">Email :</label><input id="email" name="email" value="email@gmail.com" type="text"/>
+        </div>
+        <div class="form-group row">
+            <label for="score">Score :</label><input id="score" name="score" value="12" type="text"/>
+        </div>
+        <div class="form-group row">
+            <input type="submit"/>
+        </div>
+    </form>
 </body>
 </html>

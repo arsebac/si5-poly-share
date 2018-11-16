@@ -1,7 +1,8 @@
-package pojo;
+package routes;
 
 import com.google.cloud.datastore.*;
 import com.google.gson.Gson;
+import pojo.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -44,13 +45,17 @@ public class Users extends HttpServlet {
         KeyFactory keyFactory = datastore.newKeyFactory().setKind("user");
         IncompleteKey key = keyFactory.setKind("user").newKey();
 
-        Gson gson = new Gson();
-        User user = gson.fromJson(request.getReader(), User.class);
+        String score1 = request.getParameter("score");
+        int score = Integer.parseInt(score1);
+        request.getParameterMap().forEach((k,v)->{
+            System.out.println(k+"\t"+v);
 
+        });
+        User user = new User(request.getParameter("email"), score);
 
         // Record an user to the datastore
         FullEntity<IncompleteKey> curUser = FullEntity.newBuilder(key)
-                .set("email", user.email).set("availableVideos", new LinkedList<>()).set("score", user.score).build();
+                .set("email", user.getEmail()).set("availableVideos", new LinkedList<>()).set("score", user.getScore()).build();
         datastore.add(curUser);
 
         response.getWriter().println("User added to database");

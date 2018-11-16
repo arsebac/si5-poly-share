@@ -9,10 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class User implements Serializable {
-    String email;
-    List<Video> availableVideos = new LinkedList<>();
-    long score;
-
+    public long score;
+    private String email;
+    private List<Video> availableVideos = new LinkedList<>();
     public User() {
     }
 
@@ -29,4 +28,11 @@ public class User implements Serializable {
         availableVideos.add(video);
     }
 
+    public long getScore() {
+        return score;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 }
