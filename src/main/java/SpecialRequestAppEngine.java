@@ -1,7 +1,4 @@
-import com.google.appengine.api.datastore.*;
-import com.google.appengine.api.datastore.Query;
 import com.google.appengine.repackaged.org.joda.time.LocalDate;
-import com.google.cloud.datastore.*;
 import tools.util.DatastoreHelper;
 
 import javax.servlet.ServletException;
@@ -21,9 +18,10 @@ public class SpecialRequestAppEngine extends HttpServlet {
         String size = req.getParameter("size");
         String title = req.getParameter("title");
         String url = LocalDate.now().toString() + "-" + new Random().nextInt();
-        new DatastoreHelper().addVideo(mail, size, url, title);
-
-
+        
+        new DatastoreHelper().addVideo(mail, Long.getLong(size), url, title);
+        
+        
     }
-
+    
 }
