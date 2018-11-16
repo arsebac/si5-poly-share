@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 @WebServlet(
         name = "DequeueNoob",
         description = "TaskQueues: worker",
-        urlPatterns = "/api/queuenoob/dequeue",
+        urlPatterns = "/api/queuenoob/dequeue"
 )
 public class DequeueNoob extends
         HttpServlet {
