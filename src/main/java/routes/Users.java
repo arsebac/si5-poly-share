@@ -45,7 +45,10 @@ public class Users extends HttpServlet {
         KeyFactory keyFactory = datastore.newKeyFactory().setKind("user");
         IncompleteKey key = keyFactory.setKind("user").newKey();
 
-        User user = new User(request.getParameter("email"),Integer.valueOf(request.getParameter("score")));
+        String score1 = request.getParameter("score");
+        int score = Integer.parseInt(score1);
+
+        User user = new User(request.getParameter("email"), score);
 
         // Record an user to the datastore
         FullEntity<IncompleteKey> curUser = FullEntity.newBuilder(key)
