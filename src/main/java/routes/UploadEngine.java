@@ -1,9 +1,5 @@
 package routes;
 
-import com.google.appengine.api.datastore.DatastoreFailureException;
-import com.google.appengine.api.datastore.EmbeddedEntity;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.search.DateUtil;
 import com.google.appengine.api.taskqueue.DeferredTask;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
@@ -11,7 +7,6 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
-import pojo.UploadResult;
 import tools.util.CloudStorageHelper;
 import tools.util.DatastoreHelper;
 import tools.util.MailUtil;
@@ -23,10 +18,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.Instant;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
 @MultipartConfig
 @WebServlet(name = "UploadEngine", value = "/api/upload")
@@ -69,7 +60,7 @@ public class UploadEngine extends HttpServlet {
     }
     
     private void setupDelete(DatastoreHelper datastoreHelper, String email, BlobInfo blobInfo) throws ServletException {
-        int score = (int) datastoreHelper.getUser(email).getProperty("score");
+        long score = (long) datastoreHelper.getUser(email).getProperty("score");
         int deleteTimeout = 3000;
         if (score > 100 && score <= 200) {
             deleteTimeout = 600000;
