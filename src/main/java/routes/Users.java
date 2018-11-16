@@ -47,7 +47,10 @@ public class Users extends HttpServlet {
 
         String score1 = request.getParameter("score");
         int score = Integer.parseInt(score1);
+        request.getParameterMap().forEach((k,v)->{
+            System.out.println(k+"\t"+v);
 
+        });
         User user = new User(request.getParameter("email"), score);
 
         // Record an user to the datastore
