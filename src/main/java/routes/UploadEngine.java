@@ -1,5 +1,7 @@
 package routes;
 
+import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.search.DateUtil;
 import com.google.appengine.api.taskqueue.DeferredTask;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
@@ -18,12 +20,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Instant;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 
 @MultipartConfig
 @WebServlet(name = "UploadEngine", value = "/api/upload")
 public class UploadEngine extends HttpServlet {
     
     private final String BUCKET_NAME = "polyshare-cgjm.appspot.com";
+    
     
     @Override
     public void init() throws ServletException {
@@ -60,28 +68,40 @@ public class UploadEngine extends HttpServlet {
     }
     
     private void setupDelete(DatastoreHelper datastoreHelper, String email, BlobInfo blobInfo) throws ServletException {
-        long score = (long) datastoreHelper.getUser(email).getProperty("score");
-        int deleteTimeout = 3000;
+        Entity user = datastoreHelper.getUser(email);
+        long score = (long) user.getProperty("score");
+        int deleteTimeout = 300000;
         if (score > 100 && score <= 200) {
             deleteTimeout = 600000;
         } else if (score > 200) {
             deleteTimeout = 1800000;
         }
         Queue queue = QueueFactory.getDefaultQueue();
-        queue.add(TaskOptions.Builder.withPayload(new BlobDeleter(blobInfo)).countdownMillis(deleteTimeout));
+        queue.add(TaskOptions.Builder.withPayload(new BlobDeleter(blobInfo, user)).countdownMillis(deleteTimeout));
         
     }
     
     public static class BlobDeleter implements DeferredTask {
         private BlobInfo blobInfo;
+        private Entity user;
+        private static DatastoreService datastore = null;
         
-        public BlobDeleter(BlobInfo blobInfo) {
+        static {
+            datastore = DatastoreServiceFactory.getDatastoreService();
+        }
+        
+        public BlobDeleter(BlobInfo blobInfo, Entity user) {
             this.blobInfo = blobInfo;
+            this.user = user;
         }
         
         @Override
         public void run() {
-            System.out.println("salut");
+            List<EmbeddedEntity> availableVideos = (List<EmbeddedEntity>) user.getProperty("availableVideos");
+            availableVideos.stream().filter(vid -> vid.getProperty("url").equals(blobInfo.getMediaLink()))
+                    .findFirst().ifPresent(availableVideos::remove);
+            user.setProperty("availableVideos", availableVideos);
+            datastore.put(user);
             Storage storage = StorageOptions.getDefaultInstance().getService();
             storage.delete(this.blobInfo.getBlobId());
         }

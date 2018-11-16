@@ -64,8 +64,8 @@ public class DownloadAppEngine extends HttpServlet {
         params.put("videoOwner", videoOwner);
         params.put("videoTitle", videoTitle);
         if(score < 100){
-            Queue queue = QueueFactory.getDefaultQueue();
-            queue.add(QueueHelper.createQueueMessage("/api/queuenoob/dequeueNoob", params));
+            Queue queue = QueueFactory.getQueue("queue-noob");
+            queue.add(QueueHelper.createQueueMessage("/api/queuenoob/dequeue", params));
         }else if(score < 200){
             res.getWriter().write("No queue for u !");
         }else{
