@@ -50,7 +50,7 @@ public class DatastoreHelper {
         return pq.asSingleEntity(); // Retrieve up to five posts
     }
     
-    public void addVideo(String mail, long size, BlobInfo blobInfo, String title) throws ServletException {
+    public void addVideo(String mail, long size, String url, String title) throws ServletException {
         int point = Math.toIntExact(size / 10);
         Entity entity = getUser(mail);
         List<EmbeddedEntity> availableVideos = (List<EmbeddedEntity>) entity.getProperty("availableVideos");
@@ -58,20 +58,11 @@ public class DatastoreHelper {
             availableVideos = new LinkedList<>();
         }
         EmbeddedEntity video = new EmbeddedEntity();
-        video.setProperty("url", blobInfo.getMediaLink());
+        video.setProperty("url", url);
         video.setProperty("uploadDate", DateUtil.serializeDate(new Date()));
         video.setProperty("title", title);
         availableVideos.add(video);
-        int score = (int) entity.getProperties().get("score");
-        int deleteTimeout = 3000;
-        if (score > 100 && score <= 200) {
-            deleteTimeout = 600000;
-        } else if (score > 200) {
-            deleteTimeout = 1800000;
-        }
-        Queue queue = QueueFactory.getDefaultQueue();
-        queue.add(TaskOptions.Builder.withPayload(new BlobDeleter(blobInfo)).countdownMillis(deleteTimeout));
-        
+
         
         entity.setProperty("score", ((long) entity.getProperty("score")) + point);
         entity.setProperty("availableVideos", availableVideos);
