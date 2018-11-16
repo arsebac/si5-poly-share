@@ -13,6 +13,7 @@ public class DownloadHelper {
         DatastoreHelper datastoreHelper =  (DatastoreHelper) request.getServletContext().getAttribute("datastoreHelper");
         Video video = datastoreHelper.getVideo(videoOwner, videoTitle);
 
-        MailUtil.sendEmail(email, "Link to download the video you requested: " + video.getUrl());
+        MailUtil.sendEmail(email, "Link to download the video you requested: " +
+                String.format("http://polyshare-cgjm.appspot.com/api/download/%s/%s", videoOwner, videoTitle));
     }
 }
