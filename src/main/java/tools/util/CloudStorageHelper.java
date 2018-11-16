@@ -100,7 +100,7 @@ public class CloudStorageHelper {
     }
 
     public void deleteAll(String bucketName) {
-        Iterable<Blob> blobs = storage.list(bucketName, Storage.BlobListOption.prefix("prefix")).iterateAll();
+        Iterable<Blob> blobs = storage.list(bucketName).iterateAll();
         for (Blob blob : blobs) {
             blob.delete(Blob.BlobSourceOption.generationMatch());
         }
