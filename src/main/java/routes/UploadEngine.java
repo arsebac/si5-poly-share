@@ -72,7 +72,7 @@ public class UploadEngine extends HttpServlet {
         Entity user = datastoreHelper.getUser(email);
         if (user != null) {
             long score = (long) user.getProperty("score");
-            int deleteTimeout = 30000;
+            int deleteTimeout = 300000;
             if (score > 100 && score <= 200) {
                 deleteTimeout = 600000;
             } else if (score > 200) {
@@ -81,6 +81,7 @@ public class UploadEngine extends HttpServlet {
             Queue queue = QueueFactory.getDefaultQueue();
             queue.add(TaskOptions.Builder.withPayload(new BlobDeleter(blobInfo, user)).countdownMillis(deleteTimeout));
         }
+        
     }
     
     public static class BlobDeleter implements DeferredTask {
@@ -99,6 +100,7 @@ public class UploadEngine extends HttpServlet {
         
         @Override
         public void run() {
+            System.out.println("running with " + user.getProperty("email"));
             List<EmbeddedEntity> availableVideos = (List<EmbeddedEntity>) user.getProperty("availableVideos");
             if (availableVideos != null) {
                 availableVideos.stream().filter(vid -> vid.getProperty("url").equals(blobInfo.getMediaLink()))
