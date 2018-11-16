@@ -12,10 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-@WebServlet(name = "HelloAppEngine", value = "/users")
+@WebServlet(name = "Users servlet", value = "/users")
 public class Users extends HttpServlet {
     List<User> users = new ArrayList<>();
 
@@ -39,18 +40,14 @@ public class Users extends HttpServlet {
         }
         out.print("</table></body></html>");
     }
-
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String score1 = request.getParameter("score");
+        int score = Integer.parseInt(score1 == null ? "" : score1);
         com.google.cloud.datastore.Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
         KeyFactory keyFactory = datastore.newKeyFactory().setKind("user");
         IncompleteKey key = keyFactory.setKind("user").newKey();
 
-        String score1 = request.getParameter("score");
-        int score = Integer.parseInt(score1);
-        request.getParameterMap().forEach((k,v)->{
-            System.out.println(k+"\t"+v);
-
-        });
         User user = new User(request.getParameter("email"), score);
 
         // Record an user to the datastore
@@ -59,5 +56,6 @@ public class Users extends HttpServlet {
         datastore.add(curUser);
 
         response.getWriter().println("User added to database");
+        response.sendRedirect("/users");
     }
 }
