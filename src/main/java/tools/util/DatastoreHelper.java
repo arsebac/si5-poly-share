@@ -18,6 +18,7 @@ package tools.util;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.search.DateUtil;
+import com.google.appengine.repackaged.com.google.api.client.util.PemReader;
 import pojo.Video;
 
 import javax.servlet.ServletException;
@@ -29,12 +30,12 @@ import java.util.stream.Stream;
 
 // [START example]
 public class DatastoreHelper {
-    
+
     private static DatastoreService datastore = null;
-    
+
     static {
 
-         datastore= DatastoreServiceFactory.getDatastoreService();
+        datastore = DatastoreServiceFactory.getDatastoreService();
     }
 
     public void addVideo(String mail, String size, String url, String title) throws ServletException {
@@ -53,7 +54,7 @@ public class DatastoreHelper {
         video.setProperty("title", title);
         availableVideos1.add(video);
 
-        entity.setProperty("score", ((long)entity.getProperty("score")) + point);
+        entity.setProperty("score", ((long) entity.getProperty("score")) + point);
         entity.setProperty("availableVideos", availableVideos1);
         try {
             datastore.put(entity); // store the entity
@@ -76,5 +77,13 @@ public class DatastoreHelper {
         EmbeddedEntity res = resList.get(0);
 
         return new Video((String) res.getProperty("url"), (String) res.getProperty("uploadDate"), (String) res.getProperty("title"));
+    }
+
+    public void deleteAll() {
+        Query query = new Query("user").setKeysOnly();
+        Iterable<Entity> iter = datastore.prepare(query).asIterable(FetchOptions.Builder.withLimit(400));
+        for (Entity entity : iter) {
+            datastore.delete(entity.getKey());
+        }
     }
 }
