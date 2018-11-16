@@ -1,10 +1,8 @@
 package tools.noobqueue;
 
 
-import pojo.Video;
-import tools.util.CloudStorageHelper;
 import tools.util.DatastoreHelper;
-import tools.util.MailUtil;
+import tools.util.DownloadHelper;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,7 +18,7 @@ import java.util.logging.Logger;
 @WebServlet(
         name = "DequeueNoob",
         description = "TaskQueues: worker",
-        urlPatterns = "/api/queuenoob/dequeueNoob"
+        urlPatterns = "/api/queuenoob/dequeue",
 )
 public class DequeueNoob extends
         HttpServlet {
@@ -35,14 +33,7 @@ public class DequeueNoob extends
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String email = request.getParameter("email");
-        String videoTitle = request.getParameter("videoTitle");
-        String videoOwner = request.getParameter("videoOwner");
-
-        DatastoreHelper datastoreHelper =  (DatastoreHelper) request.getServletContext().getAttribute("datastoreHelper");
-        Video video = datastoreHelper.getVideo(videoOwner, videoTitle);
-
-        MailUtil.sendEmail(email, "Link to download the video you requested: " + video.getUrl());
+        DownloadHelper.sendVideoByMail(request);
 
         // Do something with key.
         // [START_EXCLUDE]

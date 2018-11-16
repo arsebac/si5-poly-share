@@ -35,6 +35,7 @@ public class DownloadAppEngine extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         String email = req.getParameter("email");
+        email=  email.replaceAll(" ","+");
         final Query q = new Query("user").setFilter(new Query.FilterPredicate("email", Query.FilterOperator.EQUAL, email));
 
         PreparedQuery pq = datastore.prepare(q);
@@ -53,14 +54,18 @@ public class DownloadAppEngine extends HttpServlet {
             res.sendError(400,"'email' or 'type' needed.");
             return;
         }
+        if(entity == null){
+            res.sendError(400,"User "+ email + " not found");
+            return;
+        }
         long score = (long) entity.getProperty("score");
         Map<String,String> params = new HashMap<>();
         params.put("email", email);
         params.put("videoOwner", videoOwner);
         params.put("videoTitle", videoTitle);
         if(score < 100){
-            Queue queue = QueueFactory.getDefaultQueue();
-            queue.add(QueueHelper.createQueueMessage("/api/queuenoob/dequeueNoob", params));
+            Queue queue = QueueFactory.getQueue("queue-noob");
+            queue.add(QueueHelper.createQueueMessage("/api/queuenoob/dequeue", params));
         }else if(score < 200){
             res.getWriter().write("No queue for u !");
         }else{
