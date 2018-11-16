@@ -36,10 +36,10 @@ public class UploadEngine extends HttpServlet {
             String email = request.getParameter("email");
             String title = request.getParameter("title");
             String url = "http://polyshare-cgjm.appspot.com/api/download/"+email+"/" + title + "?email=" + email;
-            MailUtil.sendEmail(request.getParameter("email"), "MErci d'avoir utilisé Poly truc, Voici le lien de téléchargement partageable :" + url);
+            MailUtil.sendEmail(request.getParameter("email"), "Merci d'avoir utilisé Poly truc, Voici le lien de téléchargement partageable :" + url);
 
             DatastoreHelper datastoreHelper =  (DatastoreHelper) request.getServletContext().getAttribute("datastoreHelper");
-            datastoreHelper.addVideo(email,uploadResult.getSize()+"",uploadResult.getDownloadLink(), title);
+            datastoreHelper.addVideo(email,uploadResult.getSize()+"",uploadResult, title);
             response.setContentType("text/plain");
             response.setStatus(201);
             response.getWriter().println("succeeded");

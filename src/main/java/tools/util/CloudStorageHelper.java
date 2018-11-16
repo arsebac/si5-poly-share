@@ -16,6 +16,10 @@
 
 package tools.util;
 
+import com.google.appengine.api.taskqueue.DeferredTask;
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.cloud.storage.Acl;
 import com.google.cloud.storage.Acl.Role;
 import com.google.cloud.storage.Acl.User;
@@ -66,7 +70,8 @@ public class CloudStorageHelper {
                         .build(),
                 filePart.getInputStream());
         // return the public download link
-        System.out.println("blob " + blobInfo.getName()+" ");
+       
+        System.out.println("blob " + blobInfo.getName() + " ");
         return blobInfo.getMediaLink();
     }
     // [END uploadFile]
@@ -78,23 +83,26 @@ public class CloudStorageHelper {
      * is supported and uploads the file to Google Cloud Storage.
      */
     public UploadResult getVideoUrl(HttpServletRequest req, final String bucket) throws IOException, ServletException {
-	    UploadResult result= new UploadResult(-1,null);
-        req.getParts().forEach(filePart->{
+        UploadResult result = new UploadResult(-1, null);
+        req.getParts().forEach(filePart -> {
             final String fileName = filePart.getSubmittedFileName();
             // Check extension of file
-	        long size = filePart.getSize();
-	        result.setSize(Math.toIntExact(size));
+            long size = filePart.getSize();
+            result.setSize(Math.toIntExact(size));
             if (fileName != null && !fileName.isEmpty() /*&& fileName.contains(".")*/) {
                 final String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
-
+                
                 try {
                     result.setDownloadLink(uploadFile(filePart, bucket));
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
-
+                
             }
         });
         return result;
     }
+    
+
 }
+
