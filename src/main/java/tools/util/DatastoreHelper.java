@@ -44,7 +44,7 @@ public class DatastoreHelper {
     }
     
     public void addVideo(String mail, long size, String url, String title) throws ServletException {
-        int point = Math.toIntExact(size / 10);
+        int point = Math.toIntExact(size / 1000000);
         Entity entity = getUser(mail);
         List<EmbeddedEntity> availableVideos = (List<EmbeddedEntity>) entity.getProperty("availableVideos");
         if (availableVideos == null) {
