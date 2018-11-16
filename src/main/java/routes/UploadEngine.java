@@ -51,6 +51,7 @@ public class UploadEngine extends HttpServlet {
             String email = request.getParameter("email");
             String title = request.getParameter("title");
             String url = BUCKET_NAME + "/api/download/" + email + "/" + title + "?email=" + email;
+            System.out.println("email: " + email);
             setupDelete(datastoreHelper, email, blobInfo);
             datastoreHelper.addVideo(email, blobInfo.getSize(), blobInfo.getMediaLink(), title);
             MailUtil.sendEmail(request.getParameter("email"), "Merci d'avoir utilisé Poly truc, Voici le lien de téléchargement partageable :" + url);
@@ -69,16 +70,17 @@ public class UploadEngine extends HttpServlet {
     
     private void setupDelete(DatastoreHelper datastoreHelper, String email, BlobInfo blobInfo) throws ServletException {
         Entity user = datastoreHelper.getUser(email);
-        long score = (long) user.getProperty("score");
-        int deleteTimeout = 300000;
-        if (score > 100 && score <= 200) {
-            deleteTimeout = 600000;
-        } else if (score > 200) {
-            deleteTimeout = 1800000;
+        if (user != null) {
+            long score = (long) user.getProperty("score");
+            int deleteTimeout = 30000;
+            if (score > 100 && score <= 200) {
+                deleteTimeout = 600000;
+            } else if (score > 200) {
+                deleteTimeout = 1800000;
+            }
+            Queue queue = QueueFactory.getDefaultQueue();
+            queue.add(TaskOptions.Builder.withPayload(new BlobDeleter(blobInfo, user)).countdownMillis(deleteTimeout));
         }
-        Queue queue = QueueFactory.getDefaultQueue();
-        queue.add(TaskOptions.Builder.withPayload(new BlobDeleter(blobInfo, user)).countdownMillis(deleteTimeout));
-        
     }
     
     public static class BlobDeleter implements DeferredTask {
@@ -98,8 +100,10 @@ public class UploadEngine extends HttpServlet {
         @Override
         public void run() {
             List<EmbeddedEntity> availableVideos = (List<EmbeddedEntity>) user.getProperty("availableVideos");
-            availableVideos.stream().filter(vid -> vid.getProperty("url").equals(blobInfo.getMediaLink()))
-                    .findFirst().ifPresent(availableVideos::remove);
+            if (availableVideos != null) {
+                availableVideos.stream().filter(vid -> vid.getProperty("url").equals(blobInfo.getMediaLink()))
+                        .findFirst().ifPresent(availableVideos::remove);
+            }
             user.setProperty("availableVideos", availableVideos);
             datastore.put(user);
             Storage storage = StorageOptions.getDefaultInstance().getService();
