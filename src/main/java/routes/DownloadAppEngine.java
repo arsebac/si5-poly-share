@@ -69,8 +69,10 @@ public class DownloadAppEngine extends HttpServlet {
         params.put("videoTitle", videoTitle);
         List<Video> videos = ((List<Video>) entity.getProperty("availableVideos"));
         long MINUTE = 600*1000; // in milli-seconds.
-// Autrement dit, si un Noob fait une deuxième demande en moins d'une minute, il recevra un email contenant le texte "lol non noob".
-        boolean before1Min = videos.stream().anyMatch(vid-> new Date(DateUtil.deserializeDate(vid.getUploadDate()).getTime()+MINUTE).before(new Date()));
+        // TODO need to check in the specialised queue ?
+        // Autrement dit, si un Noob fait une deuxième demande en moins d'une minute, il recevra un email contenant le texte "lol non noob".
+        // boolean before1Min = videos.stream().anyMatch(vid-> new Date(DateUtil.deserializeDate(vid.getUploadDate()).getTime()+MINUTE).before(new Date()));
+        boolean before1Min = false;
         if(score < 100){
             if(before1Min){
                 MailUtil.sendEmail(email,"lol non noob");
