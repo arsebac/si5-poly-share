@@ -2,11 +2,14 @@ package routes;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.search.DateUtil;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.cloud.datastore.*;
+import pojo.Video;
 import tools.util.CloudStorageHelper;
 import tools.util.DatastoreHelper;
+import tools.util.MailUtil;
 import tools.util.QueueHelper;
 
 import javax.servlet.ServletException;
@@ -16,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,9 +67,18 @@ public class DownloadAppEngine extends HttpServlet {
         params.put("email", email);
         params.put("videoOwner", videoOwner);
         params.put("videoTitle", videoTitle);
+        List<Video> videos = ((List<Video>) entity.getProperty("availableVideos"));
+        long MINUTE = 600*1000; // in milli-seconds.
+// Autrement dit, si un Noob fait une deuxième demande en moins d'une minute, il recevra un email contenant le texte "lol non noob".
+        boolean before1Min = videos.stream().anyMatch(vid-> new Date(DateUtil.deserializeDate(vid.getUploadDate()).getTime()+MINUTE).before(new Date()));
         if(score < 100){
-            Queue queue = QueueFactory.getDefaultQueue();
-            queue.add(QueueHelper.createQueueMessage("/api/queuenoob/dequeue", params));
+            if(before1Min){
+                MailUtil.sendEmail(email,"lol non noob");
+            }else{
+                Queue queue = QueueFactory.getDefaultQueue();
+                queue.add(QueueHelper.createQueueMessage("/api/queuenoob/dequeue", params));
+            }
+
         }else if(score < 200){
             res.getWriter().write("No queue for u !");
         }else{
