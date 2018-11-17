@@ -1,7 +1,6 @@
 package routes;
 
 import com.google.cloud.datastore.*;
-import com.google.gson.Gson;
 import pojo.User;
 
 import javax.servlet.ServletException;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,11 +33,12 @@ public class Users extends HttpServlet {
         out.print("<html><h1>LeaderBoard</h1><body><table><th><td>Utilisateur</td><td>Score</td></th>\n");
         while (results.hasNext()) {
             com.google.cloud.datastore.Entity entity = results.next();
-            out.format("<tr><td>"+entity.getString("email")+
-                    "</td><td>"+entity.getLong("score")+"</tr>");
+            out.format("<tr><td>" + entity.getString("email") +
+                    "</td><td>" + entity.getLong("score") + "</tr>");
         }
         out.print("</table></body></html>");
     }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String score1 = request.getParameter("score");

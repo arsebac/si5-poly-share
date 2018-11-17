@@ -5,7 +5,6 @@ package tools.noobqueue;
 
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
-import com.google.appengine.api.taskqueue.TaskOptions;
 import tools.util.QueueHelper;
 
 import javax.servlet.ServletException;
@@ -32,19 +31,19 @@ public class EnqueueNoob extends HttpServlet {
         String type = request.getParameter("type");
         System.out.println(request.toString());
         System.out.println();
-        if(email == null || type == null){
-            response.sendError(400,"'email' or 'type' needed.");
+        if (email == null || type == null) {
+            response.sendError(400, "'email' or 'type' needed.");
             return;
         }
 
         Queue queue = QueueFactory.getDefaultQueue();
 
-        Map<String,String> params = new HashMap<>();
-        params.put("account",email);
-        params.put("type",type);
-        if(type.equals("download")){
-            params.put("videoId",request.getParameter("videoId"));
+        Map<String, String> params = new HashMap<>();
+        params.put("account", email);
+        params.put("type", type);
+        if (type.equals("download")) {
+            params.put("videoId", request.getParameter("videoId"));
         }
-        queue.add(QueueHelper.createQueueMessage("/api/queuenoob/dequeueNoob",params));
+        queue.add(QueueHelper.createQueueMessage("/api/queuenoob/dequeueNoob", params));
     }
 }

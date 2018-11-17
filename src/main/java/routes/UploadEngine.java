@@ -1,7 +1,9 @@
 package routes;
 
-import com.google.appengine.api.datastore.*;
-import com.google.appengine.api.search.DateUtil;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.EmbeddedEntity;
+import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.taskqueue.DeferredTask;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
@@ -9,6 +11,7 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
+import exceptions.UserNotFoundException;
 import tools.util.CloudStorageHelper;
 import tools.util.DatastoreHelper;
 import tools.util.MailUtil;
@@ -20,19 +23,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.Instant;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 @MultipartConfig
 @WebServlet(name = "UploadEngine", value = "/api/upload")
 public class UploadEngine extends HttpServlet {
-    
+
     private final String BUCKET_NAME = "polyshare-cgjm.appspot.com";
-    
-    
+
+
     @Override
     public void init() throws ServletException {
         CloudStorageHelper storageHelper = new CloudStorageHelper();
@@ -40,15 +39,15 @@ public class UploadEngine extends HttpServlet {
         DatastoreHelper datastoreHelper = new DatastoreHelper();
         this.getServletContext().setAttribute("datastoreHelper", datastoreHelper);
     }
-    
+
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         CloudStorageHelper storageHelper = (CloudStorageHelper) request.getServletContext().getAttribute("storageHelper");
         DatastoreHelper datastoreHelper = (DatastoreHelper) request.getServletContext().getAttribute("datastoreHelper");
+        String email = request.getParameter("email");
         try {
             BlobInfo blobInfo = storageHelper.getVideoUrl(request, BUCKET_NAME);
-            String email = request.getParameter("email");
             String title = request.getParameter("title");
             String url = BUCKET_NAME + "/api/download/" + email + "/" + title + "?email=" + email;
             System.out.println("email: " + email);
@@ -58,18 +57,28 @@ public class UploadEngine extends HttpServlet {
             response.setContentType("text/plain");
             response.setStatus(201);
             response.getWriter().println("succeeded");
-            
+
         } catch (ServletException e) {
             response.setContentType("text/plain");
             response.setStatus(500);
             response.getWriter().println("error");
             response.getWriter().println(e);
+        } catch (UserNotFoundException | NullPointerException e) {
+            response.setContentType("text/plain");
+            response.setStatus(401);
+            response.getWriter().println("The user " + email + " is not registered.");
+            response.getWriter().println(e);
         }
-        
+
     }
-    
+
     private void setupDelete(DatastoreHelper datastoreHelper, String email, BlobInfo blobInfo) throws ServletException {
-        Entity user = datastoreHelper.getUser(email);
+        Entity user = null;
+        try {
+            user = datastoreHelper.getUser(email);
+        } catch (UserNotFoundException ignored) {
+            ignored.printStackTrace();
+        }
         if (user != null) {
             long score = (long) user.getProperty("score");
             int deleteTimeout = 300000;
@@ -81,23 +90,24 @@ public class UploadEngine extends HttpServlet {
             Queue queue = QueueFactory.getDefaultQueue();
             queue.add(TaskOptions.Builder.withPayload(new BlobDeleter(blobInfo, user)).countdownMillis(deleteTimeout));
         }
-        
+
     }
-    
+
     public static class BlobDeleter implements DeferredTask {
-        private BlobInfo blobInfo;
-        private Entity user;
         private static DatastoreService datastore = null;
-        
+
         static {
             datastore = DatastoreServiceFactory.getDatastoreService();
         }
-        
+
+        private BlobInfo blobInfo;
+        private Entity user;
+
         public BlobDeleter(BlobInfo blobInfo, Entity user) {
             this.blobInfo = blobInfo;
             this.user = user;
         }
-        
+
         @Override
         public void run() {
             System.out.println("running with " + user.getProperty("email"));

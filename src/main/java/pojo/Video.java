@@ -1,7 +1,6 @@
 package pojo;
 
 
-
 import java.io.Serializable;
 
 public class Video implements Serializable {

@@ -18,6 +18,8 @@ package tools.util;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.search.DateUtil;
+import exceptions.NoobRateExceedException;
+import exceptions.UserNotFoundException;
 import pojo.Video;
 
 import javax.servlet.ServletException;
@@ -29,23 +31,29 @@ import java.util.stream.Collectors;
 
 // [START example]
 public class DatastoreHelper {
-    
+
     private static DatastoreService datastore = null;
-    
+
     static {
-        
+
         datastore = DatastoreServiceFactory.getDatastoreService();
     }
-    
-    public Entity getUser(String mail) {
+
+    public Entity getUser(String mail) throws UserNotFoundException {
         Query q = new Query("user").setFilter(new Query.FilterPredicate("email", Query.FilterOperator.EQUAL, mail));
         PreparedQuery pq = datastore.prepare(q);
-        return pq.asSingleEntity(); // Retrieve up to five posts
+        Entity entity = pq.asSingleEntity();
+        if (entity == null) {
+            throw new UserNotFoundException();
+        }
+        return entity; // Retrieve up to five posts
     }
-    
-    public void addVideo(String mail, long size, String url, String title) throws ServletException {
+
+    public void addVideo(String mail, long size, String url, String title) throws ServletException, UserNotFoundException {
         int point = Math.toIntExact(size / 1000000);
         Entity entity = getUser(mail);
+
+
         List<EmbeddedEntity> availableVideos = (List<EmbeddedEntity>) entity.getProperty("availableVideos");
         if (availableVideos == null) {
             availableVideos = new LinkedList<>();
@@ -56,7 +64,7 @@ public class DatastoreHelper {
         video.setProperty("title", title);
         availableVideos.add(video);
 
-        
+
         entity.setProperty("score", ((long) entity.getProperty("score")) + point);
         entity.setProperty("availableVideos", availableVideos);
         try {
@@ -65,22 +73,40 @@ public class DatastoreHelper {
             throw new ServletException("Datastore error", e);
         }
     }
-    
-    public Video getVideo(String videoOwner, String videoTitle) {
-        Entity entity = getUser(videoOwner);
-        List<EmbeddedEntity> availableVideos1 = (List<EmbeddedEntity>) entity.getProperty("availableVideos");
+
+    public Video getVideo(String videoOwner, String videoTitle, String userAskingEmail) throws NoobRateExceedException, UserNotFoundException {
+        Entity owner = getUser(videoOwner);
+        Entity client = getUser(userAskingEmail);
+        long clientScore = (long) owner.getProperty("score");
+
+        List<EmbeddedEntity> availableVideos1 = (List<EmbeddedEntity>) owner.getProperty("availableVideos");
         if (availableVideos1 == null) {
             return null;
         }
+
         List<EmbeddedEntity> resList = availableVideos1.stream().filter(e -> e.getProperty("title").equals(videoTitle)).collect(Collectors.toList());
         if (resList.size() != 1) {
             return null;
         }
         EmbeddedEntity res = resList.get(0);
-        
+        // Autrement dit, si un Noob fait une deuxième demande en moins d'une minute, il recevra un email contenant le texte "lol non noob".
+        long now = new Date().getTime();
+        List<EmbeddedEntity> userVideos = (List<EmbeddedEntity>) client.getProperty("availableVideos");
+        long before1Min = userVideos.stream().filter(vid -> {
+            long data = now - DateUtil.deserializeDate(String.valueOf(vid.getProperty("uploadDate"))).getTime();
+            return data < 60 * 1000; // in milli-seconds.
+        }).count();
+
+        boolean exceedLimit = (clientScore < 100 && before1Min > 0)
+                || (clientScore < 200 && before1Min > 2)
+                || (before1Min > 4);
+        if (exceedLimit) {
+            throw new NoobRateExceedException((String) client.getProperty("email"));
+        }
+
         return new Video((String) res.getProperty("url"), (String) res.getProperty("uploadDate"), (String) res.getProperty("title"));
     }
-    
+
 
     public void deleteAll() {
         Query query = new Query("user").setKeysOnly();

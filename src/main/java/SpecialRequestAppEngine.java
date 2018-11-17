@@ -1,4 +1,5 @@
 import com.google.appengine.repackaged.org.joda.time.LocalDate;
+import exceptions.UserNotFoundException;
 import tools.util.DatastoreHelper;
 
 import javax.servlet.ServletException;
@@ -18,10 +19,15 @@ public class SpecialRequestAppEngine extends HttpServlet {
         String size = req.getParameter("size");
         String title = req.getParameter("title");
         String url = LocalDate.now().toString() + "-" + new Random().nextInt();
-        
-        new DatastoreHelper().addVideo(mail, Long.getLong(size), url, title);
-        
-        
+
+        try {
+            new DatastoreHelper().addVideo(mail, Long.getLong(size), url, title);
+            resp.getWriter().print("The video " + title+" has been added");
+        } catch (UserNotFoundException e) {
+            resp.sendError(403,"The user " + mail + "cannot be found");
+        }
+
+
     }
-    
+
 }
