@@ -1,8 +1,10 @@
 package routes;
 
+import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.cloud.datastore.*;
 import com.google.gson.Gson;
 import pojo.User;
+import tools.util.DatastoreHelper;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,7 +20,11 @@ import java.util.List;
 
 @WebServlet(name = "Users servlet", value = "/users")
 public class Users extends HttpServlet {
-    List<User> users = new ArrayList<>();
+    @Override
+    public void init() {
+        DatastoreHelper datastoreHelper = new DatastoreHelper();
+        this.getServletContext().setAttribute("datastoreHelper", datastoreHelper);
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -40,22 +46,31 @@ public class Users extends HttpServlet {
         }
         out.print("</table></body></html>");
     }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String score1 = request.getParameter("score");
-        int score = Integer.parseInt(score1 == null ? "" : score1);
-        com.google.cloud.datastore.Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
-        KeyFactory keyFactory = datastore.newKeyFactory().setKind("user");
-        IncompleteKey key = keyFactory.setKind("user").newKey();
+        int score = Integer.parseInt(score1 == null ? "0" : score1);
+        String email = request.getParameter("email");
+//        User user = new User(email, score);
 
-        User user = new User(request.getParameter("email"), score);
+        DatastoreHelper datastoreHelper =  (DatastoreHelper) request.getServletContext().getAttribute("datastoreHelper");
+        com.google.appengine.api.datastore.Entity userFound = datastoreHelper.getUser(email);
+        if (userFound != null) {
+            datastoreHelper.addPointsToUser(email, score);
+            response.getWriter().println("Add point to user "+email);
+        } else {
 
-        // Record an user to the datastore
-        FullEntity<IncompleteKey> curUser = FullEntity.newBuilder(key)
-                .set("email", user.getEmail()).set("availableVideos", new LinkedList<>()).set("score", user.getScore()).build();
-        datastore.add(curUser);
-
-        response.getWriter().println("User added to database");
-        response.sendRedirect("/users");
+            datastoreHelper.addUser(email, score);
+//            com.google.cloud.datastore.Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+//            KeyFactory keyFactory = datastore.newKeyFactory().setKind("user");
+//            IncompleteKey key = keyFactory.setKind("user").newKey();
+//
+//            // Record an user to the datastore
+//            FullEntity<IncompleteKey> curUser = FullEntity.newBuilder(key)
+//                    .set("email", user.getEmail()).set("availableVideos", new LinkedList<>()).set("score", user.getScore()).build();
+//            datastore.add(curUser);
+            response.getWriter().println("User added to database");
+        }
     }
 }
