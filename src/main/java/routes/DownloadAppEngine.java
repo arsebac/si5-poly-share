@@ -28,30 +28,30 @@ import java.util.concurrent.TimeUnit;
         name = "Download App Engine",
         urlPatterns = "/api/download/*")
 public class DownloadAppEngine extends HttpServlet {
-
+    
     @Override
     public void init() throws ServletException {
         DatastoreHelper datastoreHelper = new DatastoreHelper();
         this.getServletContext().setAttribute("datastoreHelper", datastoreHelper);
     }
-
+    
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         String email = req.getParameter("email");
         email = email.replaceAll(" ", "+");
         final Query q = new Query("user").setFilter(new Query.FilterPredicate("email", Query.FilterOperator.EQUAL, email));
-
+        
         PreparedQuery pq = datastore.prepare(q);
         com.google.appengine.api.datastore.Entity entity = pq.asSingleEntity(); // Retrieve up to five posts
-
-
+        
+        
         String pathInfo = req.getPathInfo();
         String[] pathParts = pathInfo.split("/");
         String videoOwner = pathParts[1];
         String videoTitle = pathParts[2];
-
-
+        
+        System.out.println("parsing request video " + videoOwner + " " + videoTitle + " " + email);
         System.out.println(req.toString());
         System.out.println();
         if (email == null) {
@@ -59,11 +59,11 @@ public class DownloadAppEngine extends HttpServlet {
             return;
         }
         if (entity == null) {
-            res.sendError(400, "User " + email + " not found");
+            res.sendError(404, "User " + email + " not found");
             return;
         }
         long score = (long) entity.getProperty("score");
-
+        
         Map<String, String> params = new HashMap<>();
         params.put("email", email);
         params.put("videoOwner", videoOwner);
@@ -75,26 +75,31 @@ public class DownloadAppEngine extends HttpServlet {
             Gson gson = new GsonBuilder().create();
             Queue queue = QueueFactory.getQueue("queue-casu-leet");
             queue.add(TaskOptions.Builder
-                            .withMethod(TaskOptions.Method.PULL)
-                            .payload(gson.toJson(params)));
+                    .withMethod(TaskOptions.Method.PULL)
+                    .payload(gson.toJson(params)));
             DatastoreHelper datastoreHelper = (DatastoreHelper) req.getServletContext().getAttribute("datastoreHelper");
             processDownloadCasuLeet(gson, datastoreHelper);
         }
         res.getWriter().println("Request received");
     }
-
+    
     public void processDownloadCasuLeet(Gson gson, DatastoreHelper datastoreHelper) {
         Queue queue = QueueFactory.getQueue("queue-casu-leet");
         List<TaskHandle> tasks = queue.leaseTasks(60, TimeUnit.SECONDS, 1);
         for (TaskHandle task : tasks) {
-            Type typeToken = new TypeToken<Map<String, String>>() { }.getType();
-            Map<String, String> params = gson.fromJson(new String(task.getPayload()), typeToken);
-            String email = params.get("email");
-            String videoTitle = params.get("videoTitle");
-            String videoOwner = params.get("videoOwner");
-            DownloadHelper.sendVideoByMail(datastoreHelper, email, videoTitle, videoOwner);
+            try {
+                Type typeToken = new TypeToken<Map<String, String>>() {
+                }.getType();
+                Map<String, String> params = gson.fromJson(new String(task.getPayload()), typeToken);
+                String email = params.get("email");
+                String videoTitle = params.get("videoTitle");
+                String videoOwner = params.get("videoOwner");
+                DownloadHelper.sendVideoByMail(datastoreHelper, email, videoTitle, videoOwner);
+            } finally {
+                queue.deleteTask(task);
+                
+            }
             // [START delete_task]
-            queue.deleteTask(task);
             // [END delete_task]
         }
     }

@@ -56,7 +56,7 @@ public class UploadEngine extends HttpServlet {
 
             StringBuilder responseMail = new StringBuilder();
             responseMail.append("Merci d'avoir utilisé Poly Share.\n\nTitre:\t").append(title).append("\n").append("Lien: \t").append(url);
-            MailUtil.sendEmail(request.getParameter("email"), responseMail.toString());
+            MailUtil.sendEmail(request.getParameter("email"),"You uploaded a video", responseMail.toString());
             setupDelete(datastoreHelper, email, blobInfo);
             response.setContentType("text/plain");
             response.setStatus(201);
@@ -66,12 +66,12 @@ public class UploadEngine extends HttpServlet {
             response.sendError(500,e.toString());
         } catch (UserNotFoundException | NullPointerException e) {
             response.sendError(401,"The user " + email + " is not registered.");
-            MailUtil.sendEmail(request.getParameter("email"), "Lol non noob");
+            MailUtil.sendEmail(request.getParameter("email"), "LOL","Lol non noob");
         } catch (NoobRateExceedException e) {
             response.sendError(403,"Rate exceed for user " + email);
             response.getWriter().println("Rate exceed");
             response.getWriter().println(e);
-            MailUtil.sendEmail(request.getParameter("email"), "Lol non noob");
+            MailUtil.sendEmail(request.getParameter("email"), "LOL","Lol non noob");
         }
 
     }

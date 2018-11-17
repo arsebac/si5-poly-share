@@ -1,5 +1,7 @@
 package routes;
 
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
 import tools.util.CloudStorageHelper;
 import tools.util.DatastoreHelper;
 
@@ -31,6 +33,8 @@ public class CleanEngine extends HttpServlet {
         datastoreHelper.deleteAll();
         CloudStorageHelper storageHelper = (CloudStorageHelper) request.getServletContext().getAttribute("storageHelper");
         storageHelper.deleteAll(BUCKET_NAME);
-        response.getWriter().println("Clean databases");
+        Queue queue = QueueFactory.getQueue("queue-casu-leet");
+        queue.purge();
+        response.getWriter().println("Cleaned databases");
     }
 }

@@ -10,9 +10,9 @@ public class DownloadHelper {
     public static void sendVideoByMail(DatastoreHelper datastoreHelper, String email, String videoTitle, String videoOwner) {
         try {
             Video video = datastoreHelper.getVideo(videoOwner, videoTitle, email);
-            MailUtil.sendEmail(email, "Link to download the video you requested: " + video.getUrl());
+            MailUtil.sendEmail(email, "Requested video","Link to download the video you requested: " + video.getUrl());
         } catch (NoobRateExceedException e) {
-            MailUtil.sendEmail(email, "lol non noob");
+            MailUtil.sendEmail(email, "LOL","lol non noob");
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         }
