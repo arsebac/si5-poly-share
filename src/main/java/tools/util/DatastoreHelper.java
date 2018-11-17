@@ -49,11 +49,25 @@ public class DatastoreHelper {
         return entity; // Retrieve up to five posts
     }
 
-    public void addVideo(String mail, long size, String url, String title) throws ServletException, UserNotFoundException {
+    public void addVideo(String mail, long size, String url, String title) throws ServletException, UserNotFoundException, NoobRateExceedException {
         int point = Math.toIntExact(size / 1000000);
         Entity entity = getUser(mail);
 
+// Autrement dit, si un Noob fait une deuxième demande en moins d'une minute, il recevra un email contenant le texte "lol non noob".
+        long now = new Date().getTime();
+        List<EmbeddedEntity> userVideos = (List<EmbeddedEntity>) entity.getProperty("availableVideos");
+        long before1Min = userVideos.stream().filter(vid -> {
+            long data = now - DateUtil.deserializeDate(String.valueOf(vid.getProperty("uploadDate"))).getTime();
+            return data < 60 * 1000; // in milli-seconds.
+        }).count();
 
+        long clientScore = (long) entity.getProperty("score");
+        boolean exceedLimit = (clientScore < 100 && before1Min > 0)
+                || (clientScore < 200 && before1Min > 2)
+                || (before1Min > 4);
+        if (exceedLimit) {
+            throw new NoobRateExceedException((String) entity.getProperty("email"));
+        }
         List<EmbeddedEntity> availableVideos = (List<EmbeddedEntity>) entity.getProperty("availableVideos");
         if (availableVideos == null) {
             availableVideos = new LinkedList<>();

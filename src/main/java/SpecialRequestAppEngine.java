@@ -1,4 +1,5 @@
 import com.google.appengine.repackaged.org.joda.time.LocalDate;
+import exceptions.NoobRateExceedException;
 import exceptions.UserNotFoundException;
 import tools.util.DatastoreHelper;
 
@@ -25,6 +26,8 @@ public class SpecialRequestAppEngine extends HttpServlet {
             resp.getWriter().print("The video " + title+" has been added");
         } catch (UserNotFoundException e) {
             resp.sendError(403,"The user " + mail + "cannot be found");
+        } catch (NoobRateExceedException e) {
+            resp.sendError(406,"The user need to send email");
         }
 
 

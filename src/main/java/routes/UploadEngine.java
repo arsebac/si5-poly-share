@@ -11,6 +11,7 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
+import exceptions.NoobRateExceedException;
 import exceptions.UserNotFoundException;
 import tools.util.CloudStorageHelper;
 import tools.util.DatastoreHelper;
@@ -51,9 +52,9 @@ public class UploadEngine extends HttpServlet {
             String title = request.getParameter("title");
             String url = BUCKET_NAME + "/api/download/" + email + "/" + title + "?email=" + email;
             System.out.println("email: " + email);
-            setupDelete(datastoreHelper, email, blobInfo);
             datastoreHelper.addVideo(email, blobInfo.getSize(), blobInfo.getMediaLink(), title);
             MailUtil.sendEmail(request.getParameter("email"), "Merci d'avoir utilisé Poly truc, Voici le lien de téléchargement partageable :" + url);
+            setupDelete(datastoreHelper, email, blobInfo);
             response.setContentType("text/plain");
             response.setStatus(201);
             response.getWriter().println("succeeded");
@@ -67,6 +68,11 @@ public class UploadEngine extends HttpServlet {
             response.setContentType("text/plain");
             response.setStatus(401);
             response.getWriter().println("The user " + email + " is not registered.");
+            response.getWriter().println(e);
+        } catch (NoobRateExceedException e) {
+            response.setContentType("text/plain");
+            response.setStatus(401);
+            response.getWriter().println("Rate exceed");
             response.getWriter().println(e);
         }
 

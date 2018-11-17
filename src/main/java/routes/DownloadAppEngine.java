@@ -1,11 +1,9 @@
 package routes;
 
 import com.google.appengine.api.datastore.*;
-import com.google.appengine.api.search.DateUtil;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import tools.util.DatastoreHelper;
-import tools.util.MailUtil;
 import tools.util.QueueHelper;
 
 import javax.servlet.ServletException;
@@ -14,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,23 +60,9 @@ public class DownloadAppEngine extends HttpServlet {
         params.put("videoOwner", videoOwner);
         params.put("videoTitle", videoTitle);
         List<EmbeddedEntity> videos = ((List<EmbeddedEntity>) entity.getProperty("availableVideos"));
-        long MINUTE = 60 * 1000; // in milli-seconds.
-        // TODO need to check in the specialised queue ?
-        // Autrement dit, si un Noob fait une deuxième demande en moins d'une minute, il recevra un email contenant le texte "lol non noob".
-        long now = new Date().getTime();
-        boolean before1Min = videos.stream().anyMatch(vid -> {
-            long data = now - DateUtil.deserializeDate(String.valueOf(vid.getProperty("uploadDate"))).getTime();
-            return data < MINUTE;
-        });
         if (score < 100) {
-            if (before1Min) {
-                MailUtil.sendEmail(email, "lol non noob");
-                res.sendError(401, "Lol non noob");
-            } else {
-                Queue queue = QueueFactory.getDefaultQueue();
-                queue.add(QueueHelper.createQueueMessage("/api/queuenoob/dequeue", params));
-            }
-
+            Queue queue = QueueFactory.getDefaultQueue();
+            queue.add(QueueHelper.createQueueMessage("/api/queuenoob/dequeue", params));
         } else if (score < 200) {
             res.getWriter().write("No queue for u !");
         } else {
