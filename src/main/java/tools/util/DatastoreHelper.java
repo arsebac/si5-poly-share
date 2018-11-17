@@ -117,7 +117,10 @@ public class DatastoreHelper {
     }
 
     public void addPointsToUser(String email, int points) {
-        Entity oldUser = getUser(email);
+        Entity oldUser = null;
+        try {
+            oldUser = getUser(email);
+
         List<EmbeddedEntity> availableVideos = new LinkedList<>();
         if (oldUser.getProperty("availableVideos") != null) {
             availableVideos = (List<EmbeddedEntity>) oldUser.getProperty("availableVideos");
@@ -125,6 +128,7 @@ public class DatastoreHelper {
         long oldScore = (long) oldUser.getProperty("score");
         datastore.delete(oldUser.getKey());
         addUser(email, Math.toIntExact(oldScore + points), availableVideos);
+        } catch (UserNotFoundException ignored) {}
     }
 
     public void addUser(String email, int points) {

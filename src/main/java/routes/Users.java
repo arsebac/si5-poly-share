@@ -1,8 +1,7 @@
 package routes;
 
-import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.cloud.datastore.*;
-import pojo.User;
+import exceptions.UserNotFoundException;
 import tools.util.DatastoreHelper;
 
 import javax.servlet.ServletException;
@@ -12,9 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 @WebServlet(name = "Users servlet", value = "/users")
 public class Users extends HttpServlet {
@@ -52,23 +48,15 @@ public class Users extends HttpServlet {
         String email = request.getParameter("email");
 //        User user = new User(email, score);
 
-        DatastoreHelper datastoreHelper =  (DatastoreHelper) request.getServletContext().getAttribute("datastoreHelper");
-        com.google.appengine.api.datastore.Entity userFound = datastoreHelper.getUser(email);
-        if (userFound != null) {
+        DatastoreHelper datastoreHelper = (DatastoreHelper) request.getServletContext().getAttribute("datastoreHelper");
+        try {
+            com.google.appengine.api.datastore.Entity userFound = datastoreHelper.getUser(email);
             datastoreHelper.addPointsToUser(email, score);
-            response.getWriter().println("Add point to user "+email);
-        } else {
-
+            response.getWriter().println("Add point to user " + email + "\n<br/><a href='/'>Retour à la page d'accueuil</a>");
+        } catch (UserNotFoundException e) {
             datastoreHelper.addUser(email, score);
-//            com.google.cloud.datastore.Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
-//            KeyFactory keyFactory = datastore.newKeyFactory().setKind("user");
-//            IncompleteKey key = keyFactory.setKind("user").newKey();
-//
-//            // Record an user to the datastore
-//            FullEntity<IncompleteKey> curUser = FullEntity.newBuilder(key)
-//                    .set("email", user.getEmail()).set("availableVideos", new LinkedList<>()).set("score", user.getScore()).build();
-//            datastore.add(curUser);
-            response.getWriter().println("User added to database");
+            response.getWriter().println("User added to database\n<br/><a href='/'>Retour à la page d'accueuil</a>");
+
         }
     }
 }
