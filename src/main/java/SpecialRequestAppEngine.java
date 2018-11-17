@@ -1,4 +1,3 @@
-import com.google.appengine.repackaged.org.joda.time.LocalDate;
 import exceptions.NoobRateExceedException;
 import exceptions.UserNotFoundException;
 import tools.util.DatastoreHelper;
@@ -9,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Random;
 
 
@@ -19,7 +19,7 @@ public class SpecialRequestAppEngine extends HttpServlet {
         String mail = req.getParameter("mail");
         String size = req.getParameter("size");
         String title = req.getParameter("title");
-        String url = LocalDate.now().toString() + "-" + new Random().nextInt();
+        String url = new Date() + "-" + new Random().nextInt();
 
         try {
             new DatastoreHelper().addVideo(mail, Long.getLong(size), url, title);

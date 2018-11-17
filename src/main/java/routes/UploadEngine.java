@@ -53,25 +53,22 @@ public class UploadEngine extends HttpServlet {
             String url = BUCKET_NAME + "/api/download/" + email + "/" + title + "?email=" + email;
             System.out.println("email: " + email);
             datastoreHelper.addVideo(email, blobInfo.getSize(), blobInfo.getMediaLink(), title);
-            MailUtil.sendEmail(request.getParameter("email"), "Merci d'avoir utilisé Poly truc, Voici le lien de téléchargement partageable :" + url);
+
+            StringBuilder responseMail = new StringBuilder();
+            responseMail.append("Merci d'avoir utilisé Poly Share.\n\nTitre:\t").append(title).append("\n").append("Lien: \t").append(url);
+            MailUtil.sendEmail(request.getParameter("email"), responseMail.toString());
             setupDelete(datastoreHelper, email, blobInfo);
             response.setContentType("text/plain");
             response.setStatus(201);
             response.getWriter().println("succeeded");
 
         } catch (ServletException e) {
-            response.setContentType("text/plain");
-            response.setStatus(500);
-            response.getWriter().println("error");
-            response.getWriter().println(e);
+            response.sendError(500,e.toString());
         } catch (UserNotFoundException | NullPointerException e) {
-            response.setContentType("text/plain");
-            response.setStatus(401);
-            response.getWriter().println("The user " + email + " is not registered.");
-            response.getWriter().println(e);
+            response.sendError(401,"The user " + email + " is not registered.");
+            MailUtil.sendEmail(request.getParameter("email"), "Lol non noob");
         } catch (NoobRateExceedException e) {
-            response.setContentType("text/plain");
-            response.setStatus(401);
+            response.sendError(403,"Rate exceed for user " + email);
             response.getWriter().println("Rate exceed");
             response.getWriter().println(e);
         }

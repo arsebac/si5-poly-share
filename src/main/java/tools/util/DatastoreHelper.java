@@ -91,7 +91,7 @@ public class DatastoreHelper {
     public Video getVideo(String videoOwner, String videoTitle, String userAskingEmail) throws NoobRateExceedException, UserNotFoundException {
         Entity owner = getUser(videoOwner);
         Entity client = getUser(userAskingEmail);
-        long clientScore = (long) owner.getProperty("score");
+        long clientScore = (long) client.getProperty("score");
 
         List<EmbeddedEntity> availableVideos1 = (List<EmbeddedEntity>) owner.getProperty("availableVideos");
         if (availableVideos1 == null) {
