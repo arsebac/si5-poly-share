@@ -46,7 +46,6 @@ public class Users extends HttpServlet {
         String score1 = request.getParameter("score");
         int score = Integer.parseInt(score1 == null ? "0" : score1);
         String email = request.getParameter("email");
-//        User user = new User(email, score);
 
         DatastoreHelper datastoreHelper = (DatastoreHelper) request.getServletContext().getAttribute("datastoreHelper");
         try {

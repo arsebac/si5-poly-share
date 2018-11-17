@@ -8,6 +8,7 @@ public class User implements Serializable {
     public long score;
     private String email;
     private List<Video> availableVideos = new LinkedList<>();
+    private List<String> downloadedVideos = new LinkedList<>();
 
     public User() {
     }
