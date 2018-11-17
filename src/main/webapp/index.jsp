@@ -33,7 +33,7 @@
     <h1>Inscription</h1>
     <form action="/users" method="POST">
         <div class="form-group row">
-            <label for="email">Email :</label><input id="email" name="email" value="email@gmail.com" type="text"/>
+            <label for="email">Email :</label><input id="email" name="email" placeholder="email@gmail.com" type="text"/>
         </div>
         <div class="form-group row">
             <label for="score">Score :</label><input id="score" name="score" value="12" type="text"/>
