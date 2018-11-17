@@ -33,24 +33,24 @@ import java.util.Arrays;
 
 // [START example]
 public class CloudStorageHelper {
-
+    
     private static Storage storage = null;
-
+    
     static {
         storage = StorageOptions.getDefaultInstance().getService();
     }
-
-
+    
+    
     /**
      * Uploads a file to Google Cloud Storage to the bucket specified in the BUCKET_NAME
      * environment variable, appending a timestamp to end of the uploaded filename.
      */
     public BlobInfo uploadFile(Part filePart, final String bucketName) throws IOException {
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("-YYYY-MM-dd-HHmmssSSS");
+        System.out.println(filePart.getSubmittedFileName());
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("YYYY-MM-dd-HHmmssSSS-");
         DateTime dt = DateTime.now(DateTimeZone.UTC);
         String dtString = dt.toString(dtf);
-        System.out.println(filePart.getSubmittedFileName());
-        final String fileName = filePart.getSubmittedFileName() + dtString;
+        String fileName = dtString + filePart.getSubmittedFileName();
         BlobInfo blobInfo = storage.create(
                 BlobInfo.newBuilder(bucketName, fileName)
                         // Modify access list to allow all users with link to read file
@@ -58,14 +58,14 @@ public class CloudStorageHelper {
                         .build(),
                 filePart.getInputStream());
         // return the public download link
-
+        
         System.out.println("blob " + blobInfo.getName() + " ");
         return blobInfo;
     }
     // [END uploadFile]
-
+    
     // [START getVideoUrl]
-
+    
     /**
      * Extracts the file payload from an HttpServletRequest, checks that the file extension
      * is supported and uploads the file to Google Cloud Storage.
@@ -78,18 +78,18 @@ public class CloudStorageHelper {
             long size = filePart.getSize();
             if (fileName != null && !fileName.isEmpty() /*&& fileName.contains(".")*/) {
                 final String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
-
+                
                 try {
                     blobInfo = uploadFile(filePart, bucket);
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
-
+                
             }
         }
         return blobInfo;
     }
-
+    
     public void deleteAll(String bucketName) {
         Iterable<Blob> blobs = storage.list(bucketName).iterateAll();
         for (Blob blob : blobs) {
