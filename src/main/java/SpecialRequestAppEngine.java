@@ -31,7 +31,7 @@ public class SpecialRequestAppEngine extends HttpServlet {
         String url = new Date() + "-" + new Random().nextInt();
 
         try {
-            datastoreHelper.addVideo(mail, Long.getLong(size), url, title, false);
+            datastoreHelper.addVideo(mail, Long.parseLong(size), url, title, false);
             resp.getWriter().print("The video " + title+" has been added");
         } catch (UserNotFoundException e) {
             resp.sendError(403,"The user " + mail + "cannot be found");
