@@ -26,7 +26,7 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "{{email_adress}}+noob1@gmail.com",
+									"value": "{{email_address}}+noob1@gmail.com",
 									"type": "text"
 								},
 								{
@@ -68,7 +68,7 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "{{email_adress}}+noob2@gmail.com",
+									"value": "{{email_address}}+noob2@gmail.com",
 									"type": "text"
 								},
 								{
@@ -110,7 +110,7 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "{{email_adress}}+casual1@gmail.com",
+									"value": "{{email_address}}+casual1@gmail.com",
 									"type": "text"
 								},
 								{
@@ -152,7 +152,7 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "{{email_adress}}+casual2@gmail.com",
+									"value": "{{email_address}}+casual2@gmail.com",
 									"type": "text"
 								},
 								{
@@ -194,7 +194,7 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "{{email_adress}}+leet1@gmail.com",
+									"value": "{{email_address}}+leet1@gmail.com",
 									"type": "text"
 								},
 								{
@@ -236,7 +236,7 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "{{email_adress}}+leet2@gmail.com",
+									"value": "{{email_address}}+leet2@gmail.com",
 									"type": "text"
 								},
 								{
@@ -278,7 +278,7 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "{{email_adress}}+noob2@gmail.com",
+									"value": "{{email_address}}+noob2@gmail.com",
 									"type": "text"
 								},
 								{
@@ -320,7 +320,7 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "{{email_adress}}+casual2@gmail.com",
+									"value": "{{email_address}}+casual2@gmail.com",
 									"type": "text"
 								},
 								{
@@ -362,7 +362,7 @@
 							"urlencoded": [
 								{
 									"key": "mail",
-									"value": "{{email_adress}}+noob1@gmail.com"
+									"value": "{{email_address}}+noob1@gmail.com"
 								},
 								{
 									"key": "size",
@@ -401,7 +401,7 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "{{email_adress}}+noob1@gmail.com",
+							"value": "{{email_address}}+noob1@gmail.com",
 							"type": "text"
 						},
 						{
@@ -442,7 +442,7 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "{{email_adress}}+casual1@gmail.com",
+							"value": "{{email_address}}+casual1@gmail.com",
 							"type": "text"
 						},
 						{
@@ -483,7 +483,7 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "{{email_adress}}+leet1@gmail.com",
+							"value": "{{email_address}}+leet1@gmail.com",
 							"type": "text"
 						},
 						{
@@ -524,7 +524,7 @@
 				"header": [],
 				"body": {},
 				"url": {
-					"raw": "https://polyshare-cgjm.appspot.com/api/download/{{email_adress}}+noob1@gmail.com/sample-video?email={{email_adress}}+noob1@gmail.com",
+					"raw": "https://polyshare-cgjm.appspot.com/api/download/{{email_address}}+noob1@gmail.com/sample-video?email={{email_address}}+noob1@gmail.com",
 					"protocol": "https",
 					"host": [
 						"polyshare-cgjm",
@@ -534,13 +534,13 @@
 					"path": [
 						"api",
 						"download",
-						"{{email_adress}}+noob1@gmail.com",
+						"{{email_address}}+noob1@gmail.com",
 						"sample-video"
 					],
 					"query": [
 						{
 							"key": "email",
-							"value": "{{email_adress}}+noob1@gmail.com"
+							"value": "{{email_address}}+noob1@gmail.com"
 						}
 					]
 				}
@@ -557,7 +557,7 @@
 				"header": [],
 				"body": {},
 				"url": {
-					"raw": "https://polyshare-cgjm.appspot.com/api/download/{{email_adress}}+casual1@gmail.com/sample-video?email={{email_adress}}+casual1@gmail.com",
+					"raw": "https://polyshare-cgjm.appspot.com/api/download/{{email_address}}+casual1@gmail.com/sample-video?email={{email_address}}+casual1@gmail.com",
 					"protocol": "https",
 					"host": [
 						"polyshare-cgjm",
@@ -567,13 +567,13 @@
 					"path": [
 						"api",
 						"download",
-						"{{email_adress}}+casual1@gmail.com",
+						"{{email_address}}+casual1@gmail.com",
 						"sample-video"
 					],
 					"query": [
 						{
 							"key": "email",
-							"value": "{{email_adress}}+casual1@gmail.com"
+							"value": "{{email_address}}+casual1@gmail.com"
 						}
 					]
 				}
@@ -597,7 +597,7 @@
 				],
 				"body": {},
 				"url": {
-					"raw": "https://polyshare-cgjm.appspot.com/api/download/{{email_adress}}+leet1@gmail.com/sample-video?email={{email_adress}}+leet1@gmail.com",
+					"raw": "https://polyshare-cgjm.appspot.com/api/download/{{email_address}}+leet1@gmail.com/sample-video?email={{email_address}}+leet1@gmail.com",
 					"protocol": "https",
 					"host": [
 						"polyshare-cgjm",
@@ -607,13 +607,13 @@
 					"path": [
 						"api",
 						"download",
-						"{{email_adress}}+leet1@gmail.com",
+						"{{email_address}}+leet1@gmail.com",
 						"sample-video"
 					],
 					"query": [
 						{
 							"key": "email",
-							"value": "{{email_adress}}+leet1@gmail.com"
+							"value": "{{email_address}}+leet1@gmail.com"
 						}
 					]
 				}
@@ -693,9 +693,9 @@
 	],
 	"variable": [
 		{
-			"id": "d43acf92-6fce-4749-b62a-1de32a6512bc",
+			"id": "53f4760e-78a1-431e-a3c4-62198ba67604",
 			"key": "email_address",
-			"value": "<YOUR_EMAIL_ADDRESS>",
+			"value": "canava.thomas@gmail.com",
 			"type": "string"
 		}
 	]
