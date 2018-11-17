@@ -1,0 +1,702 @@
+{
+	"info": {
+		"_postman_id": "35275e91-2708-4825-8044-06bd81601af5",
+		"name": "Polyshare - Test cases",
+		"description": "Test cases for the project Polyshare of SACC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Setup",
+			"item": [
+				{
+					"name": "Create first Noob",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "{{email_adress}}+noob1@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "score",
+									"value": "68",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://polyshare-cgjm.appspot.com/users",
+							"protocol": "https",
+							"host": [
+								"polyshare-cgjm",
+								"appspot",
+								"com"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create second Noob",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "{{email_adress}}+noob2@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "score",
+									"value": "23",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://polyshare-cgjm.appspot.com/users",
+							"protocol": "https",
+							"host": [
+								"polyshare-cgjm",
+								"appspot",
+								"com"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create first Casual",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "{{email_adress}}+casual1@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "score",
+									"value": "136",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://polyshare-cgjm.appspot.com/users",
+							"protocol": "https",
+							"host": [
+								"polyshare-cgjm",
+								"appspot",
+								"com"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create second Casual",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "{{email_adress}}+casual2@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "score",
+									"value": "180",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://polyshare-cgjm.appspot.com/users",
+							"protocol": "https",
+							"host": [
+								"polyshare-cgjm",
+								"appspot",
+								"com"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create first Leet",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "{{email_adress}}+leet1@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "score",
+									"value": "369",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://polyshare-cgjm.appspot.com/users",
+							"protocol": "https",
+							"host": [
+								"polyshare-cgjm",
+								"appspot",
+								"com"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create second Leet",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "{{email_adress}}+leet2@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "score",
+									"value": "9000",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://polyshare-cgjm.appspot.com/users",
+							"protocol": "https",
+							"host": [
+								"polyshare-cgjm",
+								"appspot",
+								"com"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pass Noob to Casual",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "{{email_adress}}+noob2@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "score",
+									"value": "100",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://polyshare-cgjm.appspot.com/users",
+							"protocol": "https",
+							"host": [
+								"polyshare-cgjm",
+								"appspot",
+								"com"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pass Casual to Leet",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "{{email_adress}}+casual2@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "score",
+									"value": "300",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://polyshare-cgjm.appspot.com/users",
+							"protocol": "https",
+							"host": [
+								"polyshare-cgjm",
+								"appspot",
+								"com"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add a new video to database",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "mail",
+									"value": "{{email_adress}}+noob1@gmail.com"
+								},
+								{
+									"key": "size",
+									"value": "123"
+								},
+								{
+									"key": "title",
+									"value": "cat-video"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://polyshare-cgjm.appspot.com/special",
+							"protocol": "https",
+							"host": [
+								"polyshare-cgjm",
+								"appspot",
+								"com"
+							],
+							"path": [
+								"special"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Upload a video as a Noob",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "{{email_adress}}+noob1@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "sample-video",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": ""
+						}
+					]
+				},
+				"url": {
+					"raw": "https://polyshare-cgjm.appspot.com/api/upload",
+					"protocol": "https",
+					"host": [
+						"polyshare-cgjm",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload a video as a Casual",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "{{email_adress}}+casual1@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "sample-video-casual",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": ""
+						}
+					]
+				},
+				"url": {
+					"raw": "https://polyshare-cgjm.appspot.com/api/upload",
+					"protocol": "https",
+					"host": [
+						"polyshare-cgjm",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload a video as a Leet",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "{{email_adress}}+leet1@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "sample-video-leet",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": ""
+						}
+					]
+				},
+				"url": {
+					"raw": "https://polyshare-cgjm.appspot.com/api/upload",
+					"protocol": "https",
+					"host": [
+						"polyshare-cgjm",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Download a video as a Noob",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://polyshare-cgjm.appspot.com/api/download/{{email_adress}}+noob1@gmail.com/sample-video?email={{email_adress}}+noob1@gmail.com",
+					"protocol": "https",
+					"host": [
+						"polyshare-cgjm",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"download",
+						"{{email_adress}}+noob1@gmail.com",
+						"sample-video"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "{{email_adress}}+noob1@gmail.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Download a video as a Casual",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://polyshare-cgjm.appspot.com/api/download/{{email_adress}}+casual1@gmail.com/sample-video?email={{email_adress}}+casual1@gmail.com",
+					"protocol": "https",
+					"host": [
+						"polyshare-cgjm",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"download",
+						"{{email_adress}}+casual1@gmail.com",
+						"sample-video"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "{{email_adress}}+casual1@gmail.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Download a video as a Leet",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://polyshare-cgjm.appspot.com/api/download/{{email_adress}}+leet1@gmail.com/sample-video?email={{email_adress}}+leet1@gmail.com",
+					"protocol": "https",
+					"host": [
+						"polyshare-cgjm",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"download",
+						"{{email_adress}}+leet1@gmail.com",
+						"sample-video"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "{{email_adress}}+leet1@gmail.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Leaderboard",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://polyshare-cgjm.appspot.com/users",
+					"protocol": "https",
+					"host": [
+						"polyshare-cgjm",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete All",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://polyshare-cgjm.appspot.com/clean",
+					"protocol": "https",
+					"host": [
+						"polyshare-cgjm",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"clean"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "b269d3ec-3c29-487d-b21f-acff47956f24",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "2d434114-ec45-4f14-8f8b-eb79a67d7c86",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "d43acf92-6fce-4749-b62a-1de32a6512bc",
+			"key": "email_address",
+			"value": "<YOUR_EMAIL_ADDRESS>",
+			"type": "string"
+		}
+	]
+}
