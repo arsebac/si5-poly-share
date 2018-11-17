@@ -37,7 +37,7 @@ public class SpecialRequestAppEngine extends HttpServlet {
             log.warning("DatastoreHelper is null");
 
         try {
-            datastoreHelper.addVideo(mail, Long.getLong(size), url, title, false);
+            DatastoreHelper.addVideo(mail, Long.getLong(size), url, title, false);
             resp.getWriter().print("The video " + title+" has been added");
         } catch (UserNotFoundException e) {
             resp.sendError(403,"The user " + mail + "cannot be found");

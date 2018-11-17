@@ -39,7 +39,7 @@ public class DatastoreHelper {
         datastore = DatastoreServiceFactory.getDatastoreService();
     }
 
-    public Entity getUser(String mail) throws UserNotFoundException {
+    public static Entity getUser(String mail) throws UserNotFoundException {
         Query q = new Query("user").setFilter(new Query.FilterPredicate("email", Query.FilterOperator.EQUAL, mail));
         PreparedQuery pq = datastore.prepare(q);
         Entity entity = pq.asSingleEntity();
@@ -49,11 +49,11 @@ public class DatastoreHelper {
         return entity; // Retrieve up to five posts
     }
 
-    public void addVideo(String mail, long size, String url, String title) throws ServletException, UserNotFoundException, NoobRateExceedException {
+    public static void addVideo(String mail, long size, String url, String title) throws ServletException, UserNotFoundException, NoobRateExceedException {
         addVideo(mail, size, url, title, true);
     }
 
-    public void addVideo(String mail, long size, String url, String title, boolean doVerification) throws ServletException, UserNotFoundException, NoobRateExceedException {
+    public static void addVideo(String mail, long size, String url, String title, boolean doVerification) throws ServletException, UserNotFoundException, NoobRateExceedException {
         int point = Math.toIntExact(size / 1000000);
         Entity entity = getUser(mail);
         if (doVerification) {
@@ -97,7 +97,7 @@ public class DatastoreHelper {
         }
     }
 
-    public Video getVideo(String videoOwner, String videoTitle, String userAskingEmail) throws NoobRateExceedException, UserNotFoundException {
+    public static Video getVideo(String videoOwner, String videoTitle, String userAskingEmail) throws NoobRateExceedException, UserNotFoundException {
         Entity owner = getUser(videoOwner);
         Entity client = getUser(userAskingEmail);
         long clientScore = (long) client.getProperty("score");
@@ -134,7 +134,7 @@ public class DatastoreHelper {
     }
 
 
-    public void deleteAll() {
+    public static void deleteAll() {
         Query query = new Query("user").setKeysOnly();
         Iterable<Entity> iter = datastore.prepare(query).asIterable(FetchOptions.Builder.withLimit(400));
         for (Entity entity : iter) {
@@ -142,7 +142,7 @@ public class DatastoreHelper {
         }
     }
 
-    public void addPointsToUser(String email, int points) {
+    public static void addPointsToUser(String email, int points) {
         Entity oldUser = null;
         try {
             oldUser = getUser(email);
@@ -158,7 +158,7 @@ public class DatastoreHelper {
         }
     }
 
-    public void addUser(String email, int points) {
+    public static void addUser(String email, int points) {
         Entity user = new Entity("user");
         user.setProperty("score", points);
         user.setProperty("email", email);
@@ -166,7 +166,7 @@ public class DatastoreHelper {
         datastore.put(user);
     }
 
-    public void addUser(String email, int points, List<EmbeddedEntity> availableVideos) {
+    public static void addUser(String email, int points, List<EmbeddedEntity> availableVideos) {
         Entity user = new Entity("user");
         user.setProperty("score", points);
         user.setProperty("email", email);

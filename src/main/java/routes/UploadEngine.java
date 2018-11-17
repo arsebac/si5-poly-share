@@ -52,7 +52,7 @@ public class UploadEngine extends HttpServlet {
             String title = request.getParameter("title");
             String url = BUCKET_NAME + "/api/download/" + email + "/" + title + "?email=" + email;
             System.out.println("email: " + email);
-            datastoreHelper.addVideo(email, blobInfo.getSize(), blobInfo.getMediaLink(), title);
+            DatastoreHelper.addVideo(email, blobInfo.getSize(), blobInfo.getMediaLink(), title);
 
             StringBuilder responseMail = new StringBuilder();
             responseMail.append("Merci d'avoir utilisé Poly Share.\n\nTitre:\t").append(title).append("\n").append("Lien: \t").append(url);
@@ -79,7 +79,7 @@ public class UploadEngine extends HttpServlet {
     private void setupDelete(DatastoreHelper datastoreHelper, String email, BlobInfo blobInfo) throws ServletException {
         Entity user = null;
         try {
-            user = datastoreHelper.getUser(email);
+            user = DatastoreHelper.getUser(email);
         } catch (UserNotFoundException ignored) {
             ignored.printStackTrace();
         }
