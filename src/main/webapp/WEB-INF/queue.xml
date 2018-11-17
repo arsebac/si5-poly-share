@@ -8,4 +8,8 @@
         <name>queue-red</name>
         <rate>5/s</rate>
     </queue>-->
+    <queue>
+        <name>queue-casu-leet</name>
+        <mode>pull</mode>
+    </queue>
 </queue-entries>

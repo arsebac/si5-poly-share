@@ -7,15 +7,9 @@ import pojo.Video;
 import javax.servlet.http.HttpServletRequest;
 
 public class DownloadHelper {
-    public static void sendVideoByMail(HttpServletRequest request) {
-        String email = request.getParameter("email");
-        String videoTitle = request.getParameter("videoTitle");
-        String videoOwner = request.getParameter("videoOwner");
-
-        DatastoreHelper datastoreHelper = (DatastoreHelper) request.getServletContext().getAttribute("datastoreHelper");
-        Video video = null;
+    public static void sendVideoByMail(DatastoreHelper datastoreHelper, String email, String videoTitle, String videoOwner) {
         try {
-            video = datastoreHelper.getVideo(videoOwner, videoTitle, email);
+            Video video = datastoreHelper.getVideo(videoOwner, videoTitle, email);
             MailUtil.sendEmail(email, "Link to download the video you requested: " + video.getUrl());
         } catch (NoobRateExceedException e) {
             MailUtil.sendEmail(email, "lol non noob");

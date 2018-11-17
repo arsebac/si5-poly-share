@@ -3,7 +3,13 @@ package routes;
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskHandle;
+import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import tools.util.DatastoreHelper;
+import tools.util.DownloadHelper;
 import tools.util.QueueHelper;
 
 import javax.servlet.ServletException;
@@ -12,9 +18,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @WebServlet(
         name = "Download App Engine",
@@ -55,21 +63,39 @@ public class DownloadAppEngine extends HttpServlet {
             return;
         }
         long score = (long) entity.getProperty("score");
+
         Map<String, String> params = new HashMap<>();
         params.put("email", email);
         params.put("videoOwner", videoOwner);
         params.put("videoTitle", videoTitle);
-        List<EmbeddedEntity> videos = ((List<EmbeddedEntity>) entity.getProperty("availableVideos"));
         if (score < 100) {
             Queue queue = QueueFactory.getDefaultQueue();
             queue.add(QueueHelper.createQueueMessage("/api/queuenoob/dequeue", params));
-        } else if (score < 200) {
-            res.getWriter().write("No queue for u !");
         } else {
-            res.getWriter().write("No queue for u !");
+            Gson gson = new GsonBuilder().create();
+            Queue queue = QueueFactory.getQueue("queue-casu-leet");
+            queue.add(TaskOptions.Builder
+                            .withMethod(TaskOptions.Method.PULL)
+                            .payload(gson.toJson(params)));
+            DatastoreHelper datastoreHelper = (DatastoreHelper) req.getServletContext().getAttribute("datastoreHelper");
+            processDownloadCasuLeet(gson, datastoreHelper);
         }
 
+    }
 
-        // FIXME For now, everyone is noob
+    public void processDownloadCasuLeet(Gson gson, DatastoreHelper datastoreHelper) {
+        Queue queue = QueueFactory.getQueue("queue-casu-leet");
+        List<TaskHandle> tasks = queue.leaseTasks(60, TimeUnit.SECONDS, 1);
+        for (TaskHandle task : tasks) {
+            Type typeToken = new TypeToken<Map<String, String>>() { }.getType();
+            Map<String, String> params = gson.fromJson(new String(task.getPayload()), typeToken);
+            String email = params.get("email");
+            String videoTitle = params.get("videoTitle");
+            String videoOwner = params.get("videoOwner");
+            DownloadHelper.sendVideoByMail(datastoreHelper, email, videoTitle, videoOwner);
+            // [START delete_task]
+            queue.deleteTask(task);
+            // [END delete_task]
+        }
     }
 }

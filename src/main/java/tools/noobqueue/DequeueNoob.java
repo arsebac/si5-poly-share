@@ -33,10 +33,10 @@ public class DequeueNoob extends
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        DownloadHelper.sendVideoByMail(request);
-
-        // Do something with key.
-        // [START_EXCLUDE]
-        // [END_EXCLUDE]
+        DatastoreHelper datastoreHelper = (DatastoreHelper) request.getServletContext().getAttribute("datastoreHelper");
+        String email = request.getParameter("email");
+        String videoTitle = request.getParameter("videoTitle");
+        String videoOwner = request.getParameter("videoOwner");
+        DownloadHelper.sendVideoByMail(datastoreHelper, email, videoTitle, videoOwner);
     }
 }
