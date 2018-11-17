@@ -28,7 +28,7 @@ public class CleanEngine extends HttpServlet {
     @Override
     public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DatastoreHelper datastoreHelper =  (DatastoreHelper) request.getServletContext().getAttribute("datastoreHelper");
-        DatastoreHelper.deleteAll();
+        datastoreHelper.deleteAll();
         CloudStorageHelper storageHelper = (CloudStorageHelper) request.getServletContext().getAttribute("storageHelper");
         storageHelper.deleteAll(BUCKET_NAME);
         response.getWriter().println("Clean databases");

@@ -50,11 +50,11 @@ public class Users extends HttpServlet {
 
         DatastoreHelper datastoreHelper = (DatastoreHelper) request.getServletContext().getAttribute("datastoreHelper");
         try {
-            com.google.appengine.api.datastore.Entity userFound = DatastoreHelper.getUser(email);
-            DatastoreHelper.addPointsToUser(email, score);
+            com.google.appengine.api.datastore.Entity userFound = datastoreHelper.getUser(email);
+            datastoreHelper.addPointsToUser(email, score);
             response.getWriter().println("Add point to user " + email + "\n<br/><a href='/'>Retour à la page d'accueuil</a>");
         } catch (UserNotFoundException e) {
-            DatastoreHelper.addUser(email, score);
+            datastoreHelper.addUser(email, score);
             response.getWriter().println("User added to database\n<br/><a href='/'>Retour à la page d'accueuil</a>");
 
         }
