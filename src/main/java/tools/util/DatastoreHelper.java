@@ -109,6 +109,9 @@ public class DatastoreHelper {
         // Autrement dit, si un Noob fait une deuxième demande en moins d'une minute, il recevra un email contenant le texte "lol non noob".
         long now = new Date().getTime();
         List<EmbeddedEntity> userVideos = (List<EmbeddedEntity>) client.getProperty("availableVideos");
+        if (userVideos == null) {
+            userVideos = new LinkedList<>();
+        }
         long before1Min = userVideos.stream().filter(vid -> {
             long data = now - DateUtil.deserializeDate(String.valueOf(vid.getProperty("uploadDate"))).getTime();
             return data < 60 * 1000; // in milli-seconds.
