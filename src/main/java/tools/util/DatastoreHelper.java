@@ -130,6 +130,7 @@ public class DatastoreHelper {
             throw new NoobRateExceedException((String) client.getProperty("email"));
         }
         client.setProperty("downloadedVideos", downloadedVideos.add(DateUtil.serializeDate(new Date())));
+        datastore.put(client);
         return new Video((String) res.getProperty("url"), (String) res.getProperty("uploadDate"), (String) res.getProperty("title"));
     }
 
