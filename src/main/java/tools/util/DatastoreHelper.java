@@ -50,26 +50,32 @@ public class DatastoreHelper {
     }
 
     public void addVideo(String mail, long size, String url, String title) throws ServletException, UserNotFoundException, NoobRateExceedException {
+        addVideo(mail, size, url, title, true);
+    }
+
+    public void addVideo(String mail, long size, String url, String title, boolean doVerification) throws ServletException, UserNotFoundException, NoobRateExceedException {
         int point = Math.toIntExact(size / 1000000);
         Entity entity = getUser(mail);
+        if (doVerification) {
 
 // Autrement dit, si un Noob fait une deuxième demande en moins d'une minute, il recevra un email contenant le texte "lol non noob".
-        long now = new Date().getTime();
-        List<EmbeddedEntity> userVideos = (List<EmbeddedEntity>) entity.getProperty("availableVideos");
-        if (userVideos == null) {
-            userVideos = new LinkedList<>();
-        }
-        long before1Min = userVideos.stream().filter(vid -> {
-            long data = now - DateUtil.deserializeDate(String.valueOf(vid.getProperty("uploadDate"))).getTime();
-            return data < 60 * 1000; // in milli-seconds.
-        }).count();
+            long now = new Date().getTime();
+            List<EmbeddedEntity> userVideos = (List<EmbeddedEntity>) entity.getProperty("availableVideos");
+            if (userVideos == null) {
+                userVideos = new LinkedList<>();
+            }
+            long before1Min = userVideos.stream().filter(vid -> {
+                long data = now - DateUtil.deserializeDate(String.valueOf(vid.getProperty("uploadDate"))).getTime();
+                return data < 60 * 1000; // in milli-seconds.
+            }).count();
 
-        long clientScore = (long) entity.getProperty("score");
-        boolean exceedLimit = (clientScore < 100 && before1Min > 0)
-                || (clientScore < 200 && before1Min > 2)
-                || (before1Min > 4);
-        if (exceedLimit) {
-            throw new NoobRateExceedException((String) entity.getProperty("email"));
+            long clientScore = (long) entity.getProperty("score");
+            boolean exceedLimit = (clientScore < 100 && before1Min > 0)
+                    || (clientScore < 200 && before1Min > 2)
+                    || (before1Min > 4);
+            if (exceedLimit) {
+                throw new NoobRateExceedException((String) entity.getProperty("email"));
+            }
         }
         List<EmbeddedEntity> availableVideos = (List<EmbeddedEntity>) entity.getProperty("availableVideos");
         if (availableVideos == null) {
@@ -141,14 +147,15 @@ public class DatastoreHelper {
         try {
             oldUser = getUser(email);
 
-        List<EmbeddedEntity> availableVideos = new LinkedList<>();
-        if (oldUser.getProperty("availableVideos") != null) {
-            availableVideos = (List<EmbeddedEntity>) oldUser.getProperty("availableVideos");
+            List<EmbeddedEntity> availableVideos = new LinkedList<>();
+            if (oldUser.getProperty("availableVideos") != null) {
+                availableVideos = (List<EmbeddedEntity>) oldUser.getProperty("availableVideos");
+            }
+            long oldScore = (long) oldUser.getProperty("score");
+            datastore.delete(oldUser.getKey());
+            addUser(email, Math.toIntExact(oldScore + points), availableVideos);
+        } catch (UserNotFoundException ignored) {
         }
-        long oldScore = (long) oldUser.getProperty("score");
-        datastore.delete(oldUser.getKey());
-        addUser(email, Math.toIntExact(oldScore + points), availableVideos);
-        } catch (UserNotFoundException ignored) {}
     }
 
     public void addUser(String email, int points) {
