@@ -115,4 +115,31 @@ public class DatastoreHelper {
             datastore.delete(entity.getKey());
         }
     }
+
+    public void addPointsToUser(String email, int points) {
+        Entity oldUser = getUser(email);
+        List<EmbeddedEntity> availableVideos = new LinkedList<>();
+        if (oldUser.getProperty("availableVideos") != null) {
+            availableVideos = (List<EmbeddedEntity>) oldUser.getProperty("availableVideos");
+        }
+        long oldScore = (long) oldUser.getProperty("score");
+        datastore.delete(oldUser.getKey());
+        addUser(email, Math.toIntExact(oldScore + points), availableVideos);
+    }
+
+    public void addUser(String email, int points) {
+        Entity user = new Entity("user");
+        user.setProperty("score", points);
+        user.setProperty("email", email);
+        user.setProperty("availableVideos", null);
+        datastore.put(user);
+    }
+
+    public void addUser(String email, int points, List<EmbeddedEntity> availableVideos) {
+        Entity user = new Entity("user");
+        user.setProperty("score", points);
+        user.setProperty("email", email);
+        user.setProperty("availableVideos", availableVideos);
+        datastore.put(user);
+    }
 }
