@@ -60,7 +60,7 @@ public class UploadEngine extends HttpServlet {
             setupDelete(datastoreHelper, email, blobInfo);
             response.setContentType("text/plain");
             response.setStatus(201);
-            response.getWriter().println("succeeded");
+            response.getWriter().println("File uploaded");
 
         } catch (ServletException e) {
             response.sendError(500,e.toString());
@@ -71,6 +71,7 @@ public class UploadEngine extends HttpServlet {
             response.sendError(403,"Rate exceed for user " + email);
             response.getWriter().println("Rate exceed");
             response.getWriter().println(e);
+            MailUtil.sendEmail(request.getParameter("email"), "Lol non noob");
         }
 
     }

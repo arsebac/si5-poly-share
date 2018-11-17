@@ -80,7 +80,7 @@ public class DownloadAppEngine extends HttpServlet {
             DatastoreHelper datastoreHelper = (DatastoreHelper) req.getServletContext().getAttribute("datastoreHelper");
             processDownloadCasuLeet(gson, datastoreHelper);
         }
-
+        res.getWriter().println("Request received");
     }
 
     public void processDownloadCasuLeet(Gson gson, DatastoreHelper datastoreHelper) {
