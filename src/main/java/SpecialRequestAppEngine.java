@@ -10,10 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Random;
+import java.util.logging.Logger;
 
 
 @WebServlet(name = "Special Requests", value = "/special")
 public class SpecialRequestAppEngine extends HttpServlet {
+
+    private static final Logger log = Logger.getLogger(SpecialRequestAppEngine.class.getName());
 
     @Override
     public void init() throws ServletException {
@@ -29,6 +32,9 @@ public class SpecialRequestAppEngine extends HttpServlet {
         String size = req.getParameter("size");
         String title = req.getParameter("title");
         String url = new Date() + "-" + new Random().nextInt();
+
+        if (datastoreHelper == null)
+            log.warning("DatastoreHelper is null");
 
         try {
             datastoreHelper.addVideo(mail, Long.getLong(size), url, title, false);
