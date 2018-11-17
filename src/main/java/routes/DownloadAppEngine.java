@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @WebServlet(
         name = "Download App Engine",
@@ -67,17 +68,19 @@ public class DownloadAppEngine extends HttpServlet {
         params.put("email", email);
         params.put("videoOwner", videoOwner);
         params.put("videoTitle", videoTitle);
-        List<Video> videos = ((List<Video>) entity.getProperty("availableVideos"));
+        List<EmbeddedEntity> videos = ((  List<EmbeddedEntity>) entity.getProperty("availableVideos"));
+
         long MINUTE = 600*1000; // in milli-seconds.
         // TODO need to check in the specialised queue ?
         // Autrement dit, si un Noob fait une deuxième demande en moins d'une minute, il recevra un email contenant le texte "lol non noob".
-        // boolean before1Min = videos.stream().anyMatch(vid-> new Date(DateUtil.deserializeDate(vid.getUploadDate()).getTime()+MINUTE).before(new Date()));
+        List<Long> timers =  videos.stream().map(vid->new Date().getTime() - DateUtil.deserializeDate(String.valueOf(vid.getProperty("uploadDate"))).getTime()).collect(Collectors.toList());
+        System.out.println(timers);
         boolean before1Min = false;
         if(score < 100){
             if(before1Min){
                 MailUtil.sendEmail(email,"lol non noob");
             }else{
-                Queue queue = QueueFactory.getDefaultQueue();
+                Queue queue = QueueFactory.getQueue("queue-noob");
                 queue.add(QueueHelper.createQueueMessage("/api/queuenoob/dequeue", params));
             }
 
