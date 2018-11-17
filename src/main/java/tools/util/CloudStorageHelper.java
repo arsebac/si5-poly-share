@@ -47,7 +47,10 @@ public class CloudStorageHelper {
      */
     public BlobInfo uploadFile(Part filePart, final String bucketName) throws IOException {
         System.out.println(filePart.getSubmittedFileName());
-        String fileName = filePart.getSubmittedFileName();
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("YYYY-MM-dd-HHmmssSSS-");
+        DateTime dt = DateTime.now(DateTimeZone.UTC);
+        String dtString = dt.toString(dtf);
+        String fileName = dtString + filePart.getSubmittedFileName();
         BlobInfo blobInfo = storage.create(
                 BlobInfo.newBuilder(bucketName, fileName)
                         // Modify access list to allow all users with link to read file
